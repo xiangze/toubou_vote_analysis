@@ -12,3 +12,10 @@ China(optional)
 
 ## method
 Bayesian analysis by using pystan/pymc
+
+architecture
+![architecture](img/vote_analyse_arch.drawio.png)
+made by https://app.diagrams.net/
+
+
+

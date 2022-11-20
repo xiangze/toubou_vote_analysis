@@ -37,8 +37,7 @@ def souptable2csv(table,writedown=False,filename_tr=""):
     try:
         outdata[0]=outheader[0]
     except:
-        print(filename_tr)
-        print(table_header)
+        filename_tr
         
     if(writedown):
         with open(ddir+filename_tr+".csv", 'w') as fpw:

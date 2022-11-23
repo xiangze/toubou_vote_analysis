@@ -18,6 +18,7 @@ China(optional)
 - https://touhou.arrangement-chronicle.com/statistics music
 - https://w.atwiki.jp/toho/pages/842.html#id_713b4b9a title & music & charactors
 - pixiv ranking illustration
+- https://docs.google.com/spreadsheets/d/1YKpwyCOLRWiC9jucljunxS41i75zUYojI3qx1JnIpVI/edit?usp=sharing
 
 ### related articles
 - https://booth.pm/ja/items/2025481

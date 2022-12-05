@@ -22,7 +22,7 @@ China(optional)
 
 ### related articles
 - https://booth.pm/ja/items/2025481
-- https://hisayukihonbun.booth.pm/items/760429
+- https://hisayukihonbun.booth.pm/tems/760429
 - https://www.pixiv.net/artworks/68538151
 
 ## method
@@ -35,6 +35,30 @@ architecture
 made by https://app.diagrams.net/
 
 ## model
+### basic models
+#### power(charm) model
+for normalized vote numbers
 
+$$
+normVote_{i,t} \sim invlogit(\sum_{l=0}^5 main_{j(i,t-l),t-l} \sigma_{j,l} \\ + \sum_{l=0}^5 boss_{j(i,t-1),t-l}Lv_i b_{j(i,t-l),l} 
+\\ +\sum_{l=0}^5 sub_{j(i,t-l)} s_{j,l}
+ )
+$$
+##### table flags (1 or 0)
+$main_{j(i,t),t}$ i is main character of subtitle just before tth vote
+$boss_{j(i,t),t}$ i is boss character of subtitle just before tth vote
+$Lv_i$           boss level of character i
+$sub_{j(i,t),t}$ i is character of noninteger subtitle just before tth vote  
+##### parameters
+
+##### index
+- t index of time(vote )
+- l index of realtive time
+- i index of characters
+- j index of mainchar,boss,subtitle table
+
+#### subtitle(topic) model
+
+##
 
 

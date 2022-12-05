@@ -10,10 +10,10 @@ data {
   int<lower=0> Nbosses;// num. of integer bosses
   int<lower=0> Nsubchars;// num. of noninteger characters 
 
-  matrix<int=1> [Nchar][T] chars_vote_normal;//normalized vote num.
-  matrix<int=1> [Nmain][T] mainchars;
-  matrix<int=1> [Nboss][T] bosschars;
-  matrix<int=1> [Nsub][T]  subchars;
+  matrix<int=1> [Nchar][2] chars_vote_normal;//normalized vote num.
+  matrix<int=1> [Nmain][2] mainchars;
+  matrix<int=1> [Nboss][2] bosschars;
+  matrix<int=1> [Nsub][2]  subchars;
 //  matrix<int=1>  [Nmusic][T] musics;
 }
 parameters {
@@ -23,20 +23,21 @@ parameters {
 //  vector<real> nu[T];//total vote amount
 }
 
-transformed parameters {
+//transformed parameters {
+//}
+
+model {
 matrix <real> mains[Nchar][TM];
 matrix <real> bosses[Nchar][TM];
 matrix <real> subs[Nchar][TM];
-}
 
-model {
   for(t in 2:T){
       for(i in 1:Nchar){
         //integer main chars
         for(j in 1:Ntitle){
-            if(i==mainchars[j][1]){
+            if(i==mainchars[j][1]){//charname
                for(l in 1:TM){
-                    mains[j][l]=mainchars[j][2]*sigma[mainchars[j][2]][l];
+                    mains[j][l]=sigma[mainchars[j][2]][l];
                 }else{
                     mains[j][l]=0;
                 }
@@ -44,6 +45,7 @@ model {
         }
         //bosses
         for(j in 1:Ntitle){
+
         }
 
         //subchars

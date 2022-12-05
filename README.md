@@ -40,25 +40,44 @@ made by https://app.diagrams.net/
 for normalized vote numbers
 
 $$
-normVote_{i,t} \sim invlogit(\sum_{l=0}^5 main_{j(i,t-l),t-l} \sigma_{j,l} \\ + \sum_{l=0}^5 boss_{j(i,t-1),t-l}Lv_i b_{j(i,t-l),l} 
-\\ +\sum_{l=0}^5 sub_{j(i,t-l)} s_{j,l}
+normVote_{i,t} \sim invlogit(\sum_{l=1}^{TM} main_{j(i,t-l),t-l} \sigma_{j,l} \\ + \sum_{l=1}^{TM} boss_{j(i,t-1),t-l}Lv_i b_{j(i,t-l),l} 
+\\ +\sum_{l=1}^{TM} sub_{j(i,t-l)} s_{j,l}
  )
 $$
-##### table flags (1 or 0)
-$main_{j(i,t),t}$ i is main character of subtitle just before tth vote
-$boss_{j(i,t),t}$ i is boss character of subtitle just before tth vote
-$Lv_i$           boss level of character i
-$sub_{j(i,t),t}$ i is character of noninteger subtitle just before tth vote  
-##### parameters
 
+##### table flags (1 or 0)
+$main_{j(i,t),t}$ i is main character of subtitle just before tth election
+$boss_{j(i,t),t}$ i is boss character of subtitle just before tth election
+$Lv_i$           boss level of character i
+$sub_{j(i,t),t}$ i is character of noninteger subtitle just before tth election
+##### parameters
+sigma coef of integer title main characters 
+b coef of integer title bosses
+s coef of noninteger title members
 ##### index
-- t index of time(vote )
+- t index of time(election)
 - l index of realtive time
 - i index of characters
 - j index of mainchar,boss,subtitle table
 
-#### subtitle(topic) model
+#### subtitle model(topic model)
 
-##
+$\theta_m \sim Dir(\alpha)$ K dimension
+$\phi_m \sim Dir(\beta)$ V dimension
+$z_n \sim Cat(\theta_m)$  K dimension
+$w_n \sim Cat(\phi_{z_n})$ V dimension
 
+- V num. of characters
+- K num. of titles
+- N num. of total votes
+- M num. of elections
+- $\alpha, \beta$ hyperparameter 
 
+caluculate by using gemsim
+
+## Reference
+
+https://mc-stan.org/docs/stan-users-guide/index.html
+https://statmodeling.hatenablog.com/entry/topic-model-4
+https://radimrehurek.com/gensim/
+https://atmarkit.itmedia.co.jp/ait/articles/1905/22/news007.html

@@ -13,16 +13,18 @@ data {
   int<lower=0> Nboss;// num. of integer bosses
   int<lower=0> Nsub;// num. of noninteger characters 
 
-  matrix<int=1> [Nchar][2] chars_vote_normal;//normalized vote num. 0:vote,1:rate
-  matrix<int=1> [Nmain][2] mainchars;//
-  matrix<int=1> [Nboss][2] bosschars;
-  matrix<int=1> [Nsub][2]  subchars;
+  matrix<lower=0> [Nchar,T] chars_vote_normal;//normalized vote num. 0:vote,1:rate
+  //vector<lower=0> [Nchar][2] chars_vote_normal_vote;//normalized vote num. 0:vote,1:rate
+
+  matrix  [Nmain,2] mainchars;//
+  matrix  [Nboss,2] bosschars;//
+  matrix  [Nsub,2]  subchars;//
 //  matrix<int=1>  [Nmusic][T] musics;
 }
 parameters {
-  matrix<real> sigma[Ninttitle][TM];//coef of integer title main characters 
-  matrix<real> b[Ninttitle][TM]; //coef of integer title bosses
-  matrix<real> s[Nnoninttitle][TM];// coef of noninteger title members
+  matrix [Ninttitle,TM] sigma;//coef of integer title main characters 
+  matrix [Ninttitle,TM] b; //coef of integer title bosses
+  matrix [Nnoninttitle,TM] s;// coef of noninteger title members
 //  vector<real> nu[T];//total vote amount
 }
 
@@ -31,9 +33,12 @@ parameters {
 
 model {
   for(t in 2:T){//election
-  matrix <real> mains[Nmain][TM];
-  matrix <real> bosses[Nboss][TM];
-  matrix <real> subs[Nsub][TM];
+    matrix[Nmain,TM] mains;
+    matrix[Nboss,TM] bosses;
+    matrix[Nsub,TM] subs;
+//    vector[Nchar] <lower=0>dth;
+    vector[Nchar] dth;
+
       for(i in 1:Nchar){
         //integer main chars
         for(j in 1:Nmain){
@@ -67,7 +72,7 @@ model {
               }
             }
             }
-        }            
+                    
         //noninteger(sub)chars
         for(j in 1:Nsub){
            if(i==subchars[j][2]){//char index
@@ -84,9 +89,11 @@ model {
               }
             }
             }
-        chars_vote_normal[i][t]~logistic(sum(mains)+sum(bosses)+sum(subs));
+//        chars_vote_normal[i,t]~inv_logit(sum(mains)+sum(bosses)+sum(subs));
         //chars[i][t] ~ poisson(nu[t]*(sum(mains)+sum(bosses)+sum(subs) )); //cross term
+        dth[i]=sum(mains)+sum(bosses)+sum(subs);
         }            
+        chars_vote_normal[t]~dirichlet(dth);
       }
-   
+}
   

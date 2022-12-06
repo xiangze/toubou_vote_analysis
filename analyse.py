@@ -2,7 +2,7 @@
 import stan
 import pandas as pd
 
-model_fname="model/charpower.stan"
+model_fname="model/charpower0.stan"
 with open(model_fname) as f:
      model_code=f.read()
 
@@ -29,10 +29,10 @@ data={
         "Nboss":len(char_points_ratio),#  num. of integer bosses
         "Nsub":len(subchardata),#  num. of noninteger characters 
 
-        "chars_vote_normal":char_points_ratio,# normalized vote num. 0:vote,1:rate
-        "mainchars":mainchartable,
-        "bosschars":bosschartable,
-        "subchars":subchardata
+        "chars_vote_normal":char_points_ratio.to_numpy(),# normalized vote num. 0:vote,1:rate
+        "mainchars":mainchartable.to_numpy(),
+        "bosschars":bosschartable.to_numpy(),
+        "subchars":subchardata.to_numpy()
 }
 
 

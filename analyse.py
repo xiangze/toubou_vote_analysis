@@ -2,6 +2,9 @@
 import stan
 import pandas as pd
 
+def choosename(df:pd.DataFrame) ->pd.DataFrame : 
+    return pd.DataFrame([df['名前'],df['charid']]).T
+
 model_fname="model/charpower0.stan"
 with open(model_fname) as f:
      model_code=f.read()
@@ -11,9 +14,9 @@ char_points_ratio=pd.read_csv("data/char_points_ratio.csv")
 integertitledata=pd.read_csv("data/integertitles.csv")
 nonintegertitledata=pd.read_csv("data/nonintegertitles.csv")
 #indexdata
-mainchartable=pd.read_csv("data/mainchar_integer_list.csv")
-bosschartable=pd.read_csv("data/charlist.csv")
-subchardata=pd.read_csv("data/char_noninteger_list.csv")
+mainchartable=choosename(pd.read_csv("data/mainchar_integer_list.csv"))
+bosschartable=choosename(pd.read_csv("data/bosslist.csv"))
+subchardata=choosename(pd.read_csv("data/char_noninteger_list.csv"))
 
 T=18
 TM=5

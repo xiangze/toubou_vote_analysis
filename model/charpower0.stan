@@ -16,9 +16,9 @@ data {
   matrix<lower=0> [Nchar,T] chars_vote_normal;//normalized vote num. 0:vote,1:rate
   //vector<lower=0> [Nchar][2] chars_vote_normal_vote;//normalized vote num. 0:vote,1:rate
 
-  matrix  [Nmain,2] mainchars;//
-  matrix  [Nboss,2] bosschars;//
-  matrix  [Nsub,2]  subchars;//
+  matrix  [Nmain,2] mainchars;//voteid(of int title), charid
+  matrix  [Nboss,2] bosschars;//voteid(of int title), charid(boss)
+  matrix  [Nsub,2]  subchars;//voteid(of nonint title), charid
 //  matrix<int=1>  [Nmusic][T] musics;
 }
 parameters {

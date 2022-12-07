@@ -25,7 +25,12 @@ China(optional)
 - https://hisayukihonbun.booth.pm/tems/760429
 - https://www.pixiv.net/artworks/68538151
 - https://docs.google.com/spreadsheets/d/1NbdTXrPqA3df5wS37emN3RMFDH9Re2nApleYTlGKsp8/edit#gid=753814927
+
 ## method
+### summary of elections
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](
+    https://colab.research.google.com/github/xiangze/touhou_vote_analysis/blob/main/summary.ipynb) 
+
 ### scraping
 [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](
     https://colab.research.google.com/github/xiangze/touhou_vote_analysis/blob/main/download_and_scrape.ipynb)
@@ -33,7 +38,11 @@ China(optional)
 [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](
 https://colab.research.google.com/github/xiangze/toubou_vote_analysis/blob/main/EDA.ipynb)
 
-### analysis
+### correcation between title/character/music ranking
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](
+https://colab.research.google.com/github/xiangze/toubou_vote_analysis/blob/main/character_music_correlation.ipynb)
+
+### bayesian analysis
  analysis.py
 
 Bayesian analysis by using pystan/gensim

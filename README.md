@@ -59,7 +59,7 @@ made by https://app.diagrams.net/
 for normalized vote numbers
 
 $$
-normVote_{i,t} \sim dirichlet(\sum_{l=1}^{TM} main_{j(i,t-l),t-l} \sigma_{j,l} \\ + \sum_{l=1}^{TM} boss_{j(i,t-1),t-l}Lv_i b_{j(i,t-l),l} 
+normVote_{i,t} \sim Dir(\sum_{l=1}^{TM} main_{j(i,t-l),t-l} \sigma_{j,l} \\ + \sum_{l=1}^{TM} boss_{j(i,t-1),t-l}Lv_i b_{j(i,t-l),l} 
 \\ +\sum_{l=1}^{TM} sub_{j(i,t-l)} s_{j,l}
  )
 $$

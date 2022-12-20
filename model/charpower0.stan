@@ -13,12 +13,11 @@ data {
   int<lower=0> Nboss;// num. of integer bosses
   int<lower=0> Nsub;// num. of noninteger characters 
 
-  matrix<lower=0> [Nchar,T] chars_vote_normal;//normalized vote num. 0:vote,1:rate
-  //vector<lower=0> [Nchar][2] chars_vote_normal_vote;//normalized vote num. 0:vote,1:rate
+  simplex [Nchar] chars_vote_normal[T];//normalized vote num. 1:rate
+  int  mainchars[Nmain,2] ;//voteid(of int title), charid
+  int  bosschars[Nboss,2] ;//voteid(of int title), charid(boss)
+  int subchars [Nsub,2];//voteid(of nonint title), charid
 
-  matrix  [Nmain,2] mainchars;//voteid(of int title), charid
-  matrix  [Nboss,2] bosschars;//voteid(of int title), charid(boss)
-  matrix  [Nsub,2]  subchars;//voteid(of nonint title), charid
 //  matrix<int=1>  [Nmusic][T] musics;
 }
 parameters {
@@ -32,24 +31,25 @@ parameters {
 //}
 
 model {
-  for(t in 2:T){//election
+  for(t in 1:T){//election
     matrix[Nmain,TM] mains;
     matrix[Nboss,TM] bosses;
     matrix[Nsub,TM] subs;
-//    vector[Nchar] <lower=0>dth;
     vector[Nchar] dth;
 
       for(i in 1:Nchar){
         //integer main chars
         for(j in 1:Nmain){
-           if(i==mainchars[j][2]){//char index
+           if((i-1)==mainchars[j][2]){//charid
                for(l in 1:TM){
-                if( t-l == mainchars[j][1]){
+                if( t-l+1 == mainchars[j][1]){//vote id
                     mains[j][l]=sigma[t][l];
+                    print("hit sigma",i-1,",",l);
                 }else{
                     mains[j][l]=0;
                 }
-            }
+              }
+              //print("hit charid",i-1);
             }else{
               for(l in 1:TM){
                 mains[j][l]=0;
@@ -60,24 +60,24 @@ model {
         for(j in 1:Nboss){
            if(i==bosschars[j][2]){//char index
                for(l in 1:TM){
-                if( t-l == bosschars[j][1]){
+                if( t-l+1 == bosschars[j][1]){//vote id
                     bosses[j][l]=b[t][l];
                 }else{
                     bosses[j][l]=0;
                 }
-            }
+              }
             }else{
               for(l in 1:TM){
                 bosses[j][l]=0;
               }
             }
-            }
+          }
                     
         //noninteger(sub)chars
         for(j in 1:Nsub){
            if(i==subchars[j][2]){//char index
                for(l in 1:TM){
-                if( t-l == subchars[j][1]){
+                if( t-l+1 == subchars[j][1]){
                     subs[j][l]=s[t][l];
                 }else{
                     subs[j][l]=0;
@@ -89,10 +89,15 @@ model {
               }
             }
             }
-//        chars_vote_normal[i,t]~inv_logit(sum(mains)+sum(bosses)+sum(subs));
-        //chars[i][t] ~ poisson(nu[t]*(sum(mains)+sum(bosses)+sum(subs) )); //cross term
         dth[i]=sum(mains)+sum(bosses)+sum(subs);
-        }            
+        }
+        print("sigma",sigma);
+        //print("b",b);
+        //print("s",s);
+        print("mains",mains);
+        //print("bosses",bosses);        
+        //print("subs",subs);        
+        print("dth",dth);
         chars_vote_normal[t]~dirichlet(dth);
       }
 }

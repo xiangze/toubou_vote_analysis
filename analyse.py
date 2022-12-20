@@ -2,8 +2,8 @@
 import stan
 import pandas as pd
 
-def choosename(df:pd.DataFrame) ->pd.DataFrame : 
-    return pd.DataFrame([df['番号'],df['charid']]).T
+def choosename(df:pd.DataFrame,label1:str="番号",label2:str="charid") ->pd.DataFrame : 
+    return pd.DataFrame([df[label1],df[label2]]).T
 
 model_fname="model/charpower0.stan"
 #model_fname="model/void.stan"
@@ -17,7 +17,7 @@ char_points_ratio=pd.read_csv("data/char_points_ratio.csv")
 integertitledata=pd.read_csv("data/integertitles.csv")
 nonintegertitledata=pd.read_csv("data/nonintegertitles.csv")
 #indexdata
-mainchartable=choosename(pd.read_csv("data/mainchar_integer_list.csv"))
+mainchartable=choosename(pd.read_csv("data/mainchar_integer_list.csv"),"初投票回","charid")
 bosschartable=choosename(pd.read_csv("data/bosslist.csv"))
 subchardata=choosename(pd.read_csv("data/char_noninteger_list.csv"))
 
@@ -29,17 +29,9 @@ print(mainchartable.to_numpy().shape)
 print(bosschartable.to_numpy().shape)
 print(subchardata.to_numpy().shape)
 
-print(len(char_points_ratio))
-print(len(integertitledata))
-print(len(nonintegertitledata))
-
-print(len(mainchartable))
-print(len(bosschartable))
-print(len(subchardata))
-
 T=18
 TM=5
-#print(mainchartable.to_numpy())
+print(mainchartable.to_numpy().astype("int64"))
 
 data={
         "T":T,#num of elections
@@ -52,10 +44,10 @@ data={
         "Nboss":len(bosschartable),#  num. of integer bosses
         "Nsub":len(subchardata),#  num. of noninteger characters 
 
-        "chars_vote_normal":char_points_ratio.to_numpy(),# normalized vote num. 0:vote,1:rate
-        "mainchars":mainchartable.to_numpy(),
-        "bosschars":bosschartable.to_numpy(),
-        "subchars":subchardata.to_numpy()
+        "chars_vote_normal":char_points_ratio.to_numpy().T,# normalized vote num. 0:vote,1:rate
+        "mainchars":mainchartable.to_numpy().astype("int64"),
+        "bosschars":bosschartable.to_numpy().astype("int64"),
+        "subchars":subchardata.to_numpy().astype("int64")
 }
 
 posterior = stan.build(model_code, data=data)

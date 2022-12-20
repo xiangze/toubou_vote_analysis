@@ -42,6 +42,10 @@ https://colab.research.google.com/github/xiangze/toubou_vote_analysis/blob/main/
 [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](
 https://colab.research.google.com/github/xiangze/toubou_vote_analysis/blob/main/character_music_correlation.ipynb)
 
+### relation between stages and votes
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](
+https://colab.research.google.com/github/xiangze/toubou_vote_analysis/blob/main/stagewise.ipynb)
+
 ### bayesian analysis
  analysis.py
 
@@ -96,6 +100,8 @@ $w_n \sim Cat(\phi_{z_n})$ V dimension
 - $\alpha, \beta$ hyperparameter 
 
 caluculate by using gemsim
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](
+https://colab.research.google.com/github/xiangze/toubou_vote_analysis/blob/main/topicmodel.ipynb)
 
 ## Reference
 - https://mc-stan.org/docs/stan-users-guide/index.html

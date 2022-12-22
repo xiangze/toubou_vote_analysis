@@ -25,6 +25,8 @@ subchardata=choosename(pd.read_csv("data/char_noninteger_list.csv"),["初登場�
 #print(char_points_ratio.head())
 char_points_ratio=char_points_ratio[char_points_ratio.columns[2:]]
 
+print(Ninttitle)
+print(Nnonintntitle)
 print(char_points_ratio.to_numpy().shape)
 print(mainchartable.to_numpy().shape)
 print(bosschartable.to_numpy().shape)

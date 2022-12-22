@@ -2,8 +2,8 @@
 import stan
 import pandas as pd
 
-def choosename(df:pd.DataFrame,label1:str="番号",label2:str="charid") ->pd.DataFrame : 
-    return pd.DataFrame([df[label1],df[label2]]).T
+def choosename(df:pd.DataFrame,labels:[str]=["初投票回","charid"])->pd.DataFrame : 
+    return pd.DataFrame([df[s] for s in labels]   ).T
 
 model_fname="model/charpower0.stan"
 #model_fname="model/void.stan"
@@ -14,12 +14,13 @@ with open(model_fname) as f:
 char_points_ratio=pd.read_csv("data/char_points_ratio.csv")
 
 #only for length
-integertitledata=pd.read_csv("data/integertitles.csv")
-nonintegertitledata=pd.read_csv("data/nonintegertitles.csv")
+Ninttitle=len(pd.read_csv("data/integertitles.csv"))
+Nnonintntitle=len(pd.read_csv("data/nonintegertitles.csv"))
+
 #indexdata
-mainchartable=choosename(pd.read_csv("data/mainchar_integer_list.csv"),"初投票回","charid")
-bosschartable=choosename(pd.read_csv("data/bosslist.csv"))
-subchardata=choosename(pd.read_csv("data/char_noninteger_list.csv"))
+mainchartable=choosename(pd.read_csv("data/mainchar_integer_list.csv"),["初投票回","charid"])
+bosschartable=choosename(pd.read_csv("data/bosslist.csv"),["初投票回","charid","bosslevel"])
+subchardata=choosename(pd.read_csv("data/char_noninteger_list.csv"),["初登場回","charid"])
 
 #print(char_points_ratio.head())
 char_points_ratio=char_points_ratio[char_points_ratio.columns[2:]]
@@ -31,14 +32,17 @@ print(subchardata.to_numpy().shape)
 
 T=18
 TM=5
-print(mainchartable.to_numpy().astype("int64"))
+
+#print(mainchartable.to_numpy().astype("int64"))
+#print(bosschartable.to_numpy().astype("int64"))
+print(subchardata.to_numpy())
 
 data={
         "T":T,#num of elections
         "TM":TM,#time window size
         "Nchar":len(char_points_ratio),# num. of characters 
-        "Ninttitle":len(integertitledata),# num. of integer titles
-        "Nnoninttitle":len(nonintegertitledata),# num. of non integer titles
+        "Ninttitle":Ninttitle,# num. of integer titles
+        "Nnoninttitle":Nnonintntitle,# num. of non integer titles
 
         "Nmain":len(mainchartable),#  num. of integer main characters 
         "Nboss":len(bosschartable),#  num. of integer bosses

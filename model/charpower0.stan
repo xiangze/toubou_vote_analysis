@@ -16,16 +16,15 @@ data {
   simplex [Nchar] chars_vote_normal[T];//normalized vote num. 1:rate
   int  mainchars[Nmain,2] ;//voteid(of int title), charid
   int  bosschars[Nboss,3] ;//voteid(of int title), charid(boss), bosslevel
-    int subchars [Nsub,2];//voteid(of nonint title), charid
+  int subchars [Nsub,2];//voteid(of nonint title), charid
 
 //  matrix<int=1>  [Nmusic][T] musics;
 }
 parameters {
-  matrix <lower=0>[Ninttitle,TM] sigma;//coef of integer title main characters 
-  matrix <lower=0>[Ninttitle,TM] b; //coef of integer title bosses
-  matrix <lower=0>[Nnoninttitle,TM] s;// coef of noninteger title members
-//  vector<real> eps[Nchar];  // indivisual charm
-
+  matrix <lower=0>[T,TM] sigma;//coef of integer title main characters 
+  matrix <lower=0>[T,TM] b; //coef of integer title bosses
+  matrix <lower=0>[T,TM] s;// coef of noninteger title members
+  vector <lower=0>[Nchar] eps;  // indivisual charm
 //  vector<real> nu[T];//total vote amount
 }
 
@@ -33,7 +32,18 @@ parameters {
 //}
 
 model {
+   for(i in 1:Nchar){
+    eps[i]~uniform(1e-6,1000);
+  }
+
   for(t in 1:T){//election
+      for(l in 1:TM){
+        sigma[t,l]~uniform(1e-6,1000);
+        b[t,l]~uniform(1e-6,1000);
+        s[t,l]~uniform(1e-6,1000);
+      }
+
+  //for(t in 1:1){//election
     vector[Nchar] dth;
       for(i in 1:Nchar){
           matrix[Nmain,TM] mains;
@@ -46,7 +56,7 @@ model {
                for(l in 1:TM){
                 if( t-l+1 == mainchars[j][1]){//vote id
                     mains[j][l]=sigma[t][l];
-                    print("hit sigma",i-1,",",l,"\n");
+                    //print("hit sigma",i-1,",",l,"\n");
                 }else{
                     mains[j][l]=0;
                 }
@@ -64,7 +74,7 @@ model {
                for(l in 1:TM){
                 if( t-l+1 == bosschars[j][1]){//vote id
                     bosses[j][l]=b[t][l]*bosschars[j][3];//bosslevel
-                    print("hit boss charid",i-1," at ",t);
+                    //print("hit boss charid",i-1," at ",t);
                 }else{
                     bosses[j][l]=0;
                 }
@@ -82,7 +92,7 @@ model {
                for(l in 1:TM){
                 if( t-l+1 == subchars[j][1]){
                     subs[j][l]=s[t][l];
-                    print("hit nonint charid",i-1," at ",t);
+                    //print("hit nonint charid",i-1," at ",t);
                 }else{
                     subs[j][l]=0;
                 }
@@ -92,8 +102,9 @@ model {
                 subs[j][l]=0;
               }
             }
-            }
-        dth[i]=sum(mains)+sum(bosses)+sum(subs);///+eps[i];
+        }
+        dth[i]=sum(mains)+sum(bosses)+sum(subs)+eps[i];
+        //dth[i]=eps[i];
         //print("sigma",sigma);
         //print("b",b);
         //print("s",s);
@@ -101,9 +112,10 @@ model {
         //print("bosses",bosses);        
         //print("subs",subs);        
         }
-        
         print("----dth--",t,"-----",dth);       
         chars_vote_normal[t]~dirichlet(dth);
+//          chars_vote_normal[t]~normal(dth,1);
+          //target+= dirichlet_lpdf(chars_vote_normal[t]|dth);
       }
 }
   

@@ -112,7 +112,7 @@ model {
         //print("bosses",bosses);        
         //print("subs",subs);        
         }
-        print("----dth--",t,"-----",dth);       
+//        print("----dth--",t,"-----",dth);       
         chars_vote_normal[t]~dirichlet(dth);
 //          chars_vote_normal[t]~normal(dth,1);
           //target+= dirichlet_lpdf(chars_vote_normal[t]|dth);

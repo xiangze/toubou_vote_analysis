@@ -1,6 +1,8 @@
 #https://pystan.readthedocs.io/en/latest/
 import stan
 import pandas as pd
+import arviz as az
+import matplotlib.pyplot as plt
 
 def choosename(df:pd.DataFrame,labels:[str]=["初投票回","charid"])->pd.DataFrame : 
     return pd.DataFrame([df[s] for s in labels]   ).T
@@ -49,25 +51,30 @@ data={
         "Nmain":len(mainchartable),#  num. of integer main characters 
         "Nboss":len(bosschartable),#  num. of integer bosses
         "Nsub":len(subchardata),#  num. of noninteger characters 
-
-        "chars_vote_normal":char_points_ratio.to_numpy().T,# normalized vote num. 0:vote,1:rate
+        "chars_vote_normal":char_points_ratio.to_numpy().T+1e-20,# normalized vote num. 0:vote,1:rate
         "mainchars":mainchartable.to_numpy().astype("int64"),
         "bosschars":bosschartable.to_numpy().astype("int64"),
         "subchars":subchardata.to_numpy().astype("int64")
 }
 
-posterior = stan.build(model_code, data=data)
+posterior = stan.build(model_code, data=data, random_seed=3)
 
-fit = posterior.sample(num_chains=4, num_samples=1000)
+#fit = posterior.sample(num_chains=3, num_samples=1000)
+fit = posterior.sample(num_chains=3, num_samples=6000)
 print("fin")
 
 #parameters
-sigma= fit["sigma"]
-s= fit["s"]
-b= fit["b"]
+#sigma= fit["sigma"]
+#s= fit["s"]
+#b= fit["b"]
+#eps=fit["eps"]
 
-print(sigma.shape)
-print(s.shape)
+#print(sigma.shape)
+#print(s.shape)
 
 post_dataframe = fit.to_frame() 
+post_dataframe.to_csv("data/posterior_charm.csv")
 
+az.plot_trace(fit)
+#plt.show()
+plt.savefig("img/posterior_charm.png")

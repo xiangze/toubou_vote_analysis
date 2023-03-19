@@ -26,37 +26,41 @@ parameters {
   matrix <lower=0>[T,TM] maincharpower;//coef of integer title main characters 
   matrix <lower=0>[T,TM] bosspower; //coef of integer title bosses
   matrix <lower=0>[T,TM] subpower;// coef of noninteger title members
-
-  vector <lower=0>[T] titlepow; //coef of integer title
-  vector <lower=0>[T] noninttitlepow; //coef of integer title
   vector <lower=0>[Ncharmax] indivisual;  // indivisual charm
+
+  real <lower=0> mu_i,mu_m,mu_b,mu_s;
+  real <lower=0> sigma_i,sigma_m,sigma_b,sigma_s;
 }
 
 //transformed parameters {
 //}
 
 model {
+  mu_i~exponential(50);
+  mu_m~exponential(100);
+  mu_b~exponential(100);
+  mu_s~exponential(100);;
+
+  simga_i~student_t(4,0,100);
+  sigma_m~student_t(4,0,100);
+  sigma_b~student_t(4,0,100);
+  sigma_s~student_t(4,0,100);
+
    for(i in 1:Ncharmax){
-    indivisual[i]~uniform(1e-6,1000);
+    indivisual[i]~normal(mu_i,sigma_i);//uniform(1e-6,1000);
   }
 
   for(t in 1:T){//election
 
-      titlepow[t]~uniform(1e-6,1000);
-
       for(l in 1:TM){
-        maincharpower[t,l]~uniform(1e-6,1000);
-        bosspower[t,l]~uniform(1e-6,1000);
-        subpower[t,l]~uniform(1e-6,1000);
+        maincharpower[t,l]~normal(mu_m,sigma_m);//uniform(1e-6,1000);
+        bosspower[t,l]~normal(mu_b,sigma_b);//uniform(1e-6,1000);
+        subpower[t,l]~normal(mu_s,sigma_s);//uniform(1e-6,1000);
       }
 
       vector[Nchar[t]] dth;
-      vector[Nchar[t]] title;
-      vector[Nchar[t]] noninttitle;
-
+  
       for(i in 1:Nchar[t]){//indivisual character
-          title[i]=0;
-          noninttitle[i]=0;
           matrix[Nmain,TM] mains;
           matrix[Nboss,TM] bosses;
           matrix[Nsub,TM] subs;
@@ -91,9 +95,9 @@ model {
                 }
               }
 
-              if(t==bosschars[j][1]){//title charm time independent
-                title[i]=titlepow[t];
-              }
+//              if(t==bosschars[j][1]){//title charm time independent
+//                title[i]=titlepow[t];
+//              }
 
             }else{
               for(l in 1:TM){
@@ -114,9 +118,9 @@ model {
                  }
                }
 
-               if(t==subchars[j][1]){//nointtitle charm time independent
-                noninttitle[i]=noninttitlepow[t];
-               }
+//               if(t==subchars[j][1]){//nointtitle charm time independent
+//                noninttitle[i]=noninttitlepow[t];
+//               }
 
             }else{
               for(l in 1:TM){
@@ -125,7 +129,7 @@ model {
             }
         }
 
-        dth[i]=sum(mains)+sum(bosses)+sum(subs)+title[i]+noninttitle[i]+indivisual[i];
+        dth[i]=sum(mains)+sum(bosses)+sum(subs)+indivisual[i];
         //dth[i]=indivisual[i];
         //print("maincharpower",maincharpower);
         //print("boss",bosspower);

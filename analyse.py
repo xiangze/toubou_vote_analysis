@@ -116,6 +116,8 @@ with open('fit_'+suffix+'.pkl', 'wb') as w:
 print("fin")
 
 fit.to_frame().to_csv("postdata/posterior_"+suffix+".csv") 
+az.summary(fit).to_csv("postdata/summary_"+suffix+".csv") 
+
 visdata = az.from_pystan(posterior=fit)
 
 az.plot_forest(visdata)

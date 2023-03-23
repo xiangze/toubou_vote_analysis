@@ -57,10 +57,14 @@ mainchartable=choosename(pd.read_csv("data/mainchar_integer_list.csv"),["初投�
 bosschartable=choosename(pd.read_csv("data/bosslist.csv"),["初投票回","charid","bosslevel"])
 subchardata=choosename(pd.read_csv("data/char_noninteger_list.csv"),["初登場回","charid"])
 
-print(char_points_ratio.to_numpy().shape)
-print(mainchartable.to_numpy().shape)
-print(bosschartable.to_numpy().shape)
-print(subchardata.to_numpy().shape)
+hifuudata=choosename(pd.read_csv("data/hifuu_list.csv"),["charid"])
+booksdata=choosename(pd.read_csv("data/bookchar_list.csv"),["charid"])
+miscdata=choosename(pd.read_csv("data/misc_chars.csv"),["charid"])
+
+#print(char_points_ratio.to_numpy().shape)
+#print(mainchartable.to_numpy().shape)
+#print(bosschartable.to_numpy().shape)
+#print(subchardata.to_numpy().shape)
 
 assert(len(Nchar)==T)
 assert(Nchar[-1]==len(char_points_ratio))
@@ -71,6 +75,14 @@ assert(Nchar[-1]==len(char_points_ratio))
 cnn=char_points_ratio.to_numpy().T+1e-20
 cn=[cnn[i,:Nchar[i]] for i in range(T)]
 
+bookchars=booksdata.to_numpy().astype("int64").T[0]
+hifuuchars=hifuudata.to_numpy().astype("int64").T[0]
+miscchars=miscdata.to_numpy().astype("int64").T[0]
+
+print(bookchars)
+print(hifuuchars)
+print(miscchars)
+
 data={
         "T":T,#num of elections
         "TM":TM,#time window size
@@ -79,29 +91,29 @@ data={
         "Nmain":len(mainchartable),#  num. of integer main characters 
         "Nboss":len(bosschartable),#  num. of integer bosses
         "Nsub":len(subchardata),#  num. of noninteger characters 
+        "Nbook":len(booksdata),
+        "Nhifuu":len(hifuudata),
+        "Nmisc":len(miscdata),
+
         "mainchars":mainchartable.to_numpy().astype("int64"),
         "bosschars":bosschartable.to_numpy().astype("int64"),
-        "subchars":subchardata.to_numpy().astype("int64")
+        "subchars":subchardata.to_numpy().astype("int64"),
+
+        "bookchars":bookchars,
+        "hifuuchars":hifuuchars,
+        "miscchars":miscchars
 }
 # normalized vote num. 0:vote,1:rate
 for i in range(T):
     data["chars_vote_normal"+str(i+1)]=cn[i]
     
+
 buildmodel= stan.build(model_code, data=data, random_seed=4)
-fit = buildmodel.sample(num_chains=4, num_samples=6000) #,warmup=1000)
+fit = buildmodel.sample(num_chains=4, num_samples=1500) #,warmup=1000)
 
 with open('fit_'+suffix+'.pkl', 'wb') as w:
     pickle.dump(fit, w)
 print("fin")
-
-#parameters
-#sigma= fit["sigma"]
-#s= fit["s"]
-#b= fit["b"]
-#eps=fit["eps"]
-
-#print(sigma.shape)
-#print(s.shape)
 
 fit.to_frame().to_csv("postdata/posterior_"+suffix+".csv") 
 visdata = az.from_pystan(posterior=fit)
@@ -111,3 +123,6 @@ plt.savefig("img/posterior_charm_"+suffix+".png")
 
 az.plot_forest(visdata,var_names=("maincharpower"))
 plt.savefig("img/posterior_charm_maincharpower"+suffix+".png")
+
+az.plot_forest(visdata,var_names=("indivisual"))
+plt.savefig("img/posterior_charm_indivisual"+suffix+".png")

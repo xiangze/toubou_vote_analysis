@@ -1,6 +1,40 @@
 //https://stats.biopapyrus.jp/bayesian-statistics/stan/stan-block.html
 //https://statmodeling.hatenablog.com/entry/state-space-model-many-terms
 
+functions{
+  vector hit(int Num,int []table,int index,real power){
+    vector [Num]out;
+      for(j in 1:Num){
+          if((index-1)==table[j]){
+              out[j]=power;
+          }else{
+              out[j]=0;
+          }
+      }
+    return out;
+  }
+
+matrix  hit2d(int Num,int [,]table,int index,int t,int TM,matrix power){
+          matrix [Num,TM] out;
+          for(j in 1:Num){
+           if((index-1)==table[j][2]){//charid
+               for(l in 1:TM){
+                if( t-l+1 == table[j][1]){//vote id
+                    out[j][l]=power[t][l];
+                }else{
+                    out[j][l]=0;
+                }
+              }
+            }else{
+              for(l in 1:TM){
+                out[j][l]=0;
+              }
+            }
+          }
+        return out;
+  }
+}
+
 data {
   int<lower=0> T;//num of elections
   int<lower=0> TM;//time window size
@@ -25,7 +59,7 @@ data {
   int subchars [Nsub,2];//voteid(of nonint title), charid
 
   int bookchars [Nbook];
-  int hihuuhars [Nhifuu];
+  int hifuuchars [Nhifuu];
   int miscchars [Nmisc];
 
 //  matrix<int=1>  [Nmusic][T] musics;
@@ -38,9 +72,10 @@ parameters {
 
   real <lower=0> mu_i,mu_m,mu_b,mu_s;
   real <lower=0> sigma_i,sigma_m,sigma_b,sigma_s;
-
+  
   real <lower=0> bookpow,hifuupow,miscpow;
 }
+
 
 //transformed parameters {
 //}
@@ -56,12 +91,16 @@ model {
   sigma_m~student_t(4,0,100);
   sigma_b~student_t(4,0,100);
   sigma_s~student_t(4,0,100);
+//  sigma_t~student_t(4,0,20);
 
    for(i in 1:Ncharmax){
     indivisual[i]~normal(mu_i,sigma_i);//uniform(1e-6,1000);
   }
 
   for(t in 1:T){//election
+      //titlepow[t]~normal(mu_t,sigma_t);
+      //noninttitlepow[t]~normal(mu_t,sigma_t);
+
       bookpow~exponential(10);
       hifuupow~exponential(10);
       miscpow~exponential(1);
@@ -78,8 +117,10 @@ model {
           matrix[Nmain,TM] mains;
           matrix[Nboss,TM] bosses;
           matrix[Nsub,TM] subs;
-          real book,hifuu,misc;
-
+          vector[Nbook] book;
+          vector[Nhifuu] hifuu;
+          vector[Nmisc] misc;
+/*
         //integer main chars
         for(j in 1:Nmain){
            if((i-1)==mainchars[j][2]){//charid
@@ -98,6 +139,15 @@ model {
               }
             }
         }
+        */
+
+        mains=hit2d(Nmain,mainchars,i,t,TM,maincharpower);
+        subs=hit2d(Nsub,subchars,i,t,TM,subpower);
+
+        book=hit(Nbook,bookchars,i,bookpow);
+        hifuu=hit(Nhifuu,hifuuchars,i,hifuupow);
+        misc=hit(Nmisc,miscchars,i,miscpow);
+
         //bosses
         for(j in 1:Nboss){
            if((i-1)==bosschars[j][2]){//charid
@@ -109,14 +159,14 @@ model {
                     bosses[j][l]=0;
                 }
               }
-
             }else{
               for(l in 1:TM){
                 bosses[j][l]=0;
               }
             }
           }
-                    
+
+/*                    
         //noninteger(sub)chars
         for(j in 1:Nsub){
            if((i-1)==subchars[j][2]){//charid
@@ -135,35 +185,36 @@ model {
               }
             }
         }
-
+*/
+        /*
         for(j in 1:Nbook){
           if((i-1)==bookchars[j]){
-              book=bookpow;
+              book[j]=bookpow;
           }else{
-              book=0;
+              book[j]=0;
           }
         }
 
         for(j in 1:Nhifuu){
           if((i-1)==hifuuchars[j]){
-              hifuu=hifuupow;
+              hifuu[j]=hifuupow;
           }else{
-              hifuu=0;
+              hifuu[j]=0;
           }
         }
 
         for(j in 1:Nmisc){
           if((i-1)==miscchars[j]){
-            misc=miscpow;
+            misc[j]=miscpow;
           }else{
-            misc=0;
+            misc[j]=0;
           }
         }
-
-        dth[i]=sum(mains)+sum(bosses)+sum(subs)+hifuu+book+misc+indivisual[i];
-        
-        //dth[i]=(sum(mains)+sum(bosses)+title[i]+sum(subs)+noninttitle[i])*indivisual[i];
-        //dth[i]=indivisual[i];
+        */
+        //dth[i]=sum(mains)+sum(bosses)+sum(subs)+sum(hifuu)+sum(book)+sum(misc)+indivisual[i];
+        real coef=(sum(mains)+sum(bosses)+sum(subs)+sum(hifuu)+sum(book)+sum(misc));
+        dth[i]=coef*indivisual[i];
+        //dth[i]=(sum(mains)+sum(bosses)+sum(subs)+sum(hifuu)+sum(book)+sum(misc))*indivisual[i];
         //print("maincharpower",maincharpower);
         //print("boss",bosspower);
         //print("sub",subpower);
@@ -172,9 +223,10 @@ model {
         //print("bosses",bosses);        
         //print("subs",subs);        
         //print("title",title);        
-        }
+        print("coef",coef);        
 
-//        print("----dth--",t,"-----",dth);       
+        }
+        print("----dth--",t,"-----",dth);       
         if(t==1){
                 chars_vote_normal1~dirichlet(dth);
         {% for t2 in range(2,T1) %}

@@ -1,7 +1,45 @@
 //https://stats.biopapyrus.jp/bayesian-statistics/stan/stan-block.html
 //https://statmodeling.hatenablog.com/entry/state-space-model-many-terms
+{% macro hit(out,Num, table,index,power) -%}
+    for(j in 1:{{Num}}){
+          if(({{index}}-1)=={{table}}[j]){
+              {{out}}[j]={{power}};
+          }else{
+              {{out}}[j]=0;
+          }
+    }
+{%- endmacro %}
 
-functions{
+{% macro hit1d(out, Num, table,index,power) -%}
+      {{out}}=0;
+      for(j in 1:{{Num}}){
+        //charid& title (time independent)
+        if((({{index}}-1)=={{table}}[j][2])){
+               {{out}}={{power}}[{{table}}[j][1]];
+            }
+        }
+{%- endmacro %}
+
+//matrix  hit2d(int Num,int [,]table,int index,int t,int TM,matrix power){
+{% macro hit2d(out, Num,table,index,t,TM,power) -%}
+          for(j in 1:{{Num}}){
+           if(({{index}}-1)=={{table}}[j][2]){//charid
+               for(l in 1:{{TM}}){
+                if( t-l+1 == {{table}}[j][1]){//vote id
+                    {{out}}[j][l]={{power}}[t][l];
+                }else{
+                    {{out}}[j][l]=0;
+                }
+              }
+            }else{
+              for(l in 1:{{TM}}){
+                {{out}}[j][l]=0;
+              }
+            }
+          }
+{%- endmacro %}
+
+/*functions{
   vector hit(int Num,int []table,int index,real power){
     vector [Num]out;
       for(j in 1:Num){
@@ -17,8 +55,9 @@ functions{
       for(j in 1:Num){
         for(t in 1:Tmax){//t is title index
         //charid& title (time independent)
-        if(((index-1)==table[j][2])&& (t==table[j][1])){
-               return power[t];
+//        if(((index-1)==table[j][2])&& (t==table[j][1])){
+        if((index-1)==table[j][2]){
+               return power[table[j][1]];
             }
         }
       }
@@ -45,6 +84,7 @@ matrix  hit2d(int Num,int [,]table,int index,int t,int TM,matrix power){
         return out;
   }
 }
+*/
 
 data {
   int<lower=0> T;//num of elections
@@ -104,17 +144,16 @@ model {
   sigma_b~student_t(4,0,20);
   sigma_s~student_t(4,0,20);
   sigma_t~student_t(4,0,20);
-/*
-   for(i in 1:Ncharmax){
-    indivisual[i]~exponential(30);//normal(mu_i,sigma_i);//uniform(1e-6,1000);
-  }
-*/
+
     indivisual~exponential(30);
     bookpow~exponential(10);
     hifuupow~exponential(10);
     miscpow~exponential(1);
+    
+    real titlebase,noninttitlebase;
 
   for(t in 1:T){//election
+        vector[Nchar[t]] dth;
 
       titlepow[t]~normal(mu_t,sigma_t);//t is title index
       noninttitlepow[t]~normal(mu_t,sigma_t);//t is nonint title index
@@ -125,10 +164,6 @@ model {
         subpower[t,l]~normal(mu_s,sigma_s);//uniform(1e-6,1000);
       }
 
-      vector[Nchar[t]] dth;
-      vector [Nchar[t]]titlebase;
-      vector [Nchar[t]]noninttitlebase;
-
       for(i in 1:Nchar[t]){//indivisual character
           matrix[Nmain,TM] mains;
           matrix[Nboss,TM] bosses;
@@ -137,34 +172,17 @@ model {
           vector[Nhifuu] hifuu;
           vector[Nmisc] misc;
 
-/*
-        //integer main chars
-        for(j in 1:Nmain){
-           if((i-1)==mainchars[j][2]){//charid
-               for(l in 1:TM){
-                if( t-l+1 == mainchars[j][1]){//vote id
-                    mains[j][l]=maincharpower[t][l];
-                    //print("hit maincharpower",i-1,",",l,"\n");
-                }else{
-                    mains[j][l]=0;
-                }
-              }
-              //print("hit charid",i-1);
-            }else{
-              for(l in 1:TM){
-                mains[j][l]=0;
-              }
-            }
-        }
-        */
+//        mains=hit2d(Nmain,mainchars,i,t,TM,maincharpower);
+//        subs=hit2d(Nsub,subchars,i,t,TM,subpower);
+    {{ hit2d("mains", "Nmain","mainchars","i","t","TM","maincharpower") }}
+    {{ hit2d("subs" , "Nsub", "subchars","i","t","TM","subpower") }}
+//        book=hit(Nbook,bookchars,i,bookpow);
+//        hifuu=hit(Nhifuu,hifuuchars,i,hifuupow);
+//        misc=hit(Nmisc,miscchars,i,miscpow);
+        {{hit("book","Nbook","bookchars","i","bookpow")}}        
+        {{hit("hifuu","Nhifuu","hifuuchars","i","hifuupow")}}        
+        {{hit("misc","Nmisc","miscchars","i","miscpow")}}        
 
-        mains=hit2d(Nmain,mainchars,i,t,TM,maincharpower);
-        subs=hit2d(Nsub,subchars,i,t,TM,subpower);
-
-        book=hit(Nbook,bookchars,i,bookpow);
-        hifuu=hit(Nhifuu,hifuuchars,i,hifuupow);
-        misc=hit(Nmisc,miscchars,i,miscpow);
-        
         //bosses
         for(j in 1:Nboss){
            if((i-1)==bosschars[j][2]){//charid
@@ -183,36 +201,16 @@ model {
             }
           }
 
-        titlebase[i]=hit1d(Nboss,Nchar[t],bosschars,i,titlepow);
-        noninttitlebase[i]=hit1d(Nsub,Nchar[t],subchars,i,noninttitlepow);
+        //titlebase=hit1d(Nboss,Nchar[t],bosschars,i,titlepow);
+        //noninttitlebase=hit1d(Nsub,Nchar[t],subchars,i,noninttitlepow);
+       {{hit1d("titlebase", "Nboss", "bosschars","i","titlepow") }}
+       {{hit1d("noninttitlebase", "Nsub", "subchars","i","noninttitlepow") }}
 
-/*                    
-        //noninteger(sub)chars
-        for(j in 1:Nsub){
-           if((i-1)==subchars[j][2]){//charid
-               for(l in 1:TM){
-                if( t-l+1 == subchars[j][1]){//election id 
-                    subs[j][l]=subpower[t][l];
-                    //print("hit nonint charid",i-1," at ",t);
-                 }else{
-                    subs[j][l]=0;
-                 }
-               }
-
-            }else{
-              for(l in 1:TM){
-                subs[j][l]=0;
-              }
-            }
-        }
-*/
-       
-        //dth[i]=sum(mains)+sum(bosses)+sum(subs)+sum(hifuu)+sum(book)+sum(misc)+indivisual[i];
-        real coef=(sum(mains)+sum(bosses)+titlebase[i]+sum(subs)
-                    +noninttitlebase[i]
-                    +sum(hifuu)+sum(book)+sum(misc));
-        dth[i]=coef*indivisual[i];
-
+        dth[i]=(sum(mains)+sum(bosses)+titlebase+sum(subs)
+                    +noninttitlebase
+                    +sum(hifuu)+sum(book)+sum(misc))*indivisual[i];
+                    
+/*
         if(coef==0.){
           print("t=",t);
           print("index",i);
@@ -225,15 +223,13 @@ model {
             {%- endfor %}                
             }else{
             }
-          /*
-        print("mains",mains);
-        print("bosses",bosses);        
-        print("subs",subs);        
-        print("misc",misc);        
-        */
+          
+        //print("mains",mains);
+        //print("bosses",bosses);        
+        //print("subs",subs);        
+        //print("misc",misc);        
         }
-
-        //dth[i]=(sum(mains)+sum(bosses)+sum(subs)+sum(hifuu)+sum(book)+sum(misc))*indivisual[i];
+*/
         //print("maincharpower",maincharpower);
         //print("boss",bosspower);
         //print("sub",subpower);

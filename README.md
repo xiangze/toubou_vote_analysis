@@ -47,9 +47,13 @@ https://colab.research.google.com/github/xiangze/toubou_vote_analysis/blob/main/
 https://colab.research.google.com/github/xiangze/toubou_vote_analysis/blob/main/stagewise.ipynb)
 
 ### bayesian analysis
- analysis.py
-
 Bayesian analysis by using pystan/gensim
+
+```
+python3 analysis.py 18 5 modelsuffix
+```
+18 is election number, 5 is duration of time effect
+
 
 <!--
 architecture

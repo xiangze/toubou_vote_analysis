@@ -79,9 +79,9 @@ bookchars=booksdata.to_numpy().astype("int64").T[0]
 hifuuchars=hifuudata.to_numpy().astype("int64").T[0]
 miscchars=miscdata.to_numpy().astype("int64").T[0]
 
-print(bookchars)
-print(hifuuchars)
-print(miscchars)
+#print(bookchars)
+#print(hifuuchars)
+#print(miscchars)
 
 data={
         "T":T,#num of elections
@@ -109,7 +109,7 @@ for i in range(T):
     
 
 buildmodel= stan.build(model_code, data=data, random_seed=4)
-fit = buildmodel.sample(num_chains=4, num_samples=1500) #,warmup=1000)
+fit = buildmodel.sample(num_chains=4, num_samples=2000) #,warmup=1000)
 
 with open('fit_'+suffix+'.pkl', 'wb') as w:
     pickle.dump(fit, w)

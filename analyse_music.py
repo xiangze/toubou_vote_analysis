@@ -53,6 +53,7 @@ ratio      =music_points_ratio_id.T[offset:offset+T].to_numpy()
 
 #print(music_points_ratio_id.shape)
 print(ratio.shape)
+print(ratio)
 
 Nmusic=[]
 for n in range(T):
@@ -65,19 +66,29 @@ print(Nmusic)
 assert(len(Nmusic)==T)
 assert(Nmusic[-1]==len(ratio.T))
 
+def toint(df:pd.DataFrame):
+    return df.to_numpy().astype("int64")
+
+def toflag(s:str):
+    return toint(music_points_ratio_id[s])
+
+music_points_ratio_id["isinteger"]=pd.DataFrame((music_points_ratio_id["番号"]*10%10==0) &( music_points_ratio_id["番号"] !=0))
+
 data={
         "T":T,#num of elections
         "TM":TM,#time window size
         "Nmusic":Nmusic,
         "Nmusicmax":max(Nmusic),
-
-        "electionnum":music_points_ratio_id["人気投票"].to_numpy().astype("int64"),
-        "isinteger":(music_points_ratio_id["番号"]*10%10==0).to_numpy().astype("int64"),
-        "isnoninteger":(music_points_ratio_id["番号"]*10%10!=0).to_numpy().astype("int64"),
-        "order":music_points_ratio_id["order"].to_numpy().astype("int64"),
-        "isbook":music_points_ratio_id["書籍"].to_numpy().astype("int64"),
-        "isCD":music_points_ratio_id["CD"].to_numpy().astype("int64"),
-        "ishifuu":music_points_ratio_id["秘封"].to_numpy().astype("int64"),
+        "electionnum":toflag("人気投票"),
+        "order":toflag("Number"),
+        "isinteger":toflag("isinteger"),
+        "isnoninteger":toint(music_points_ratio_id["番号"]*10%10!=0),
+        "isbook":toflag("isbook"),
+        "isCD":toflag("isCD"),
+        "ishifuu":toflag("ishifuu"),
+        "isold":toflag("isold"),
+        "isother":toflag("isother"),
+        "isoriginal":toflag("isoriginal"),
     }
 
 # normalized vote num. 0:vote,1:rate
@@ -87,7 +98,7 @@ for i in range(T):
     data["vote_normal"+str(i+1)]=cn[i]
     
 buildmodel= stan.build(model_code, data=data, random_seed=4)
-fit = buildmodel.sample(num_chains=4, num_samples=6000,warmup=1000)
+fit = buildmodel.sample(num_chains=4, num_samples=2000)#,warmup=1000)
 
 with open('fit_'+suffix+'.pkl', 'wb') as w:
     pickle.dump(fit, w)

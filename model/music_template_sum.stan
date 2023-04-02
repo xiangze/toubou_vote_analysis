@@ -97,7 +97,7 @@ data {
   simplex [Nmusic[{{t}}]] vote_normal{{t}};  
   {%- endfor %}                
 
-    int elecionnum [Nmusicmax];//election num
+    int electionnum [Nmusicmax];//election num
     //flags
     int isinteger     [Nmusicmax];
     int isnoninteger [Nmusicmax];
@@ -105,7 +105,11 @@ data {
     int isbook  [Nmusicmax];
     int isCD    [Nmusicmax];
     int ishifuu [Nmusicmax];
+    int isold[Nmusicmax];
+    int isother [Nmusicmax];
+    int isoriginal [Nmusicmax];
 }
+
 parameters {
   matrix <lower=0>[T,TM] inttitlepow; //coef of integer title
   matrix <lower=0>[T,TM] noninttitlepow; //coef of integer title
@@ -146,13 +150,13 @@ model {
           real book, hifuu,CD;
 
         for(l in 1:TM){
-            if(isinteger[i]&& (t==elecionnum[i]+l)){
-                inttitle[l]=order[i]*inttitlepow[elecionnum[i]][l];
+            if(isinteger[i]&& (t==electionnum[i]+l)){
+                inttitle[l]=order[i]*inttitlepow[electionnum[i]][l];
             }else{
                 inttitle[l]=0;
             }
-            if(isnoninteger[i]&&  (t==elecionnum[i]+l)){
-                noninttitle[l]=noninttitlepow[elecionnum[i]][l];                
+            if(isnoninteger[i]&&  (t==electionnum[i]+l)){
+                noninttitle[l]=noninttitlepow[electionnum[i]][l];                
             }else{
                 noninttitle[l]=0;
             }

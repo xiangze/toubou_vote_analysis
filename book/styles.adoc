@@ -1,0 +1,17 @@
+:pdf-fontsdir: fonts
+:lang: ja
+:doctype: book
+:toc: left
+:toclevels: 5
+:toc-title: 目次
+:sectnums:
+//:pdf-style: themes/my-theme.yml
+:author: xiangze
+:revdate: 2023/5
+:scripts: cjk 
+//:title-page-background-image: image:img/EDMshrine.png[position=top,pdfwidth=80%]
+:title-page-background-image: image:img/EDMshrine_tate.png[position=bottom]
+//:title-page-background-image: image:img/103827656_p0.jpg[position=top]
+:title-font-color: #000000
+//:title-placement: below
+:stem:

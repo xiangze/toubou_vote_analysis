@@ -8,10 +8,6 @@ import argparse
 from jinja2 import Environment, FileSystemLoader
 env = Environment(loader=FileSystemLoader('./', encoding='utf8'))
 
-#for dataframe
-#def choosename(df:pd.DataFrame,labels:[str]=["初投票回","charid"])->pd.DataFrame : 
-#    return pd.DataFrame([df[s] for s in labels]   ).T
-
 #template utils
 def frender(fname:str,d:dict):
     templ = env.get_template(fname)
@@ -46,14 +42,14 @@ renderfromfile(template_fname,model_fname,{'T':T,"T1":T+1,"TM":TM})
 with open(model_fname) as f:
      model_code=f.read()
 
-music_points_ratio_id=pd.read_csv("data/music_point_ratio_re.csv").fillna(0)
+music_points_ratio_id=pd.read_csv("data/music_point_ratio_sort.csv").fillna(0)
 
 offset=3
 ratio      =music_points_ratio_id.T[offset:offset+T].to_numpy()
 
 #print(music_points_ratio_id.shape)
 print(ratio.shape)
-print(ratio)
+#print(ratio)
 
 Nmusic=[]
 for n in range(T):
@@ -85,6 +81,7 @@ data={
         "isnoninteger":toint(music_points_ratio_id["番号"]*10%10!=0),
         "isbook":toflag("isbook"),
         "isCD":toflag("isCD"),
+        "isseihou":toflag("isseihou"),
         "ishifuu":toflag("ishifuu"),
         "isold":toflag("isold"),
         "isother":toflag("isother"),
@@ -100,16 +97,13 @@ for i in range(T):
 buildmodel= stan.build(model_code, data=data, random_seed=4)
 fit = buildmodel.sample(num_chains=4, num_samples=2000)#,warmup=1000)
 
-with open('fit_'+suffix+'.pkl', 'wb') as w:
+with open('fit_music_'+suffix+'.pkl', 'wb') as w:
     pickle.dump(fit, w)
 print("fin")
 
-fit.to_frame().to_csv("postdata/posterior_"+suffix+".csv") 
+fit.to_frame().to_csv("postdata/music_posterior_"+suffix+".csv") 
 visdata = az.from_pystan(posterior=fit)
 
 az.plot_forest(visdata)
-plt.savefig("img/posterior_charm_"+suffix+".png")
-
-#az.plot_forest(visdata,var_names=("maincharpower"))
-#plt.savefig("img/posterior_charm_"+suffix+".png")
+plt.savefig("img/music_posterior_charm_"+suffix+".png")
 

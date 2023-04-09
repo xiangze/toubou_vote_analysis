@@ -1,0 +1,43 @@
+include::styles.adoc[]
+
+= 東方Project人気投票の解析　〜可視化＆ベイズ統計モデリング〜
+
+== はじめに
+過去20年にわたる東方Projectの楽曲、キャラ(人妖)の人気投票データからの目で見てわかるパターンの抽出と数理モデルの当てはめを試みました。
+
+人気投票サイト https://toho-vote.info/result のデータと東方Wiki http://thwiki.info 、の作品、楽曲、キャラ情報を使用し、解析コードとそれによって整形されたデータは
+https://github.com/xiangze/toubou_vote_analysis
+においてあります。pandas,pystanなどpythonのライブラリを用いており、Googleのcolaboratoryを用いて実行できます。また本書の原稿も置いてあります。
+
+本書の内容はブログ記事
+- https://xiangze.hatenablog.com/entry/2022/12/21/210352#%E3%81%9F%E3%82%81%E3%81%AB%E3%81%AA%E3%82%8B%E6%9C%AC
+- 
+に基づいたものです。
+
+== データの準備
+人気投票サイト, をダウンロードします。
+スクレイピングを
+ https://toho-vote.info/result のデータと東方Wiki http://thwiki.info の作品、楽曲、キャラ情報を使用し、解析コードとそれによって整形されたデータは
+
+== 記述統計
+
+include::description.adoc[]
+
+== ベイズ統計モデリング
+
+include::bayes.adoc[]
+
+== 参考書籍
+
+- Selenium実践入門 ――自動化による継続的なブラウザテスト
+- StanとRでベイズ統計モデリング https://www.kyoritsu-pub.co.jp/book/b10003786.html
+pythonについての記述はありませんが英語版と著者のgithubサイト(https://github.com/MatsuuraKentaro/Bayesian_Statistical_Modeling_with_Stan_R_and_Python)にはpython,pystanのコードがあります。
+- 東方コミュニティ白書2019 https://booth.pm/ja/items/2025481
+- https://www.pixiv.net/artworks/68538151
+
+== あとがき
+
+include::atogaki.adoc[]
+
+<<<
+include::okutsuke.adoc[]

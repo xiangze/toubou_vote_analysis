@@ -47,9 +47,23 @@ https://colab.research.google.com/github/xiangze/toubou_vote_analysis/blob/main/
 https://colab.research.google.com/github/xiangze/toubou_vote_analysis/blob/main/stagewise.ipynb)
 
 ### bayesian analysis
- analysis.py
+<<<<<<< Updated upstream
+=======
+run
+```
+ python analysis.py
+```
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](
+https://colab.research.google.com/github/xiangze/toubou_vote_analysis/blob/main/stan_analyse.ipynb)
 
+>>>>>>> Stashed changes
 Bayesian analysis by using pystan/gensim
+
+```
+python3 analysis.py 18 5 modelsuffix
+```
+18 is election number, 5 is duration of time effect
+
 
 <!--
 architecture
@@ -103,6 +117,11 @@ $w_n \sim Cat(\phi_{z_n})$ V dimension
 caluculate by using gemsim
 [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](
 https://colab.research.google.com/github/xiangze/toubou_vote_analysis/blob/main/topicmodel.ipynb)
+
+## Visualize result posterior distribution of parameters
+
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](
+https://colab.research.google.com/github/xiangze/toubou_vote_analysis/blob/main/stan_analysis.ipynb)
 
 ## Reference
 - https://mc-stan.org/docs/stan-users-guide/index.html

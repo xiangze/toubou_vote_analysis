@@ -1,0 +1,6 @@
+東方Project人気投票の解析　〜可視化＆ベイズ統計モデリング〜
+
+* xiangze750
+* 発行 2023.5
+* twitter: xiangze750
+* 印刷 graphic

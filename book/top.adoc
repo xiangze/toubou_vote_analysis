@@ -15,9 +15,16 @@ https://github.com/xiangze/toubou_vote_analysis
 に基づいたものです。
 
 == データの準備
-人気投票サイト, をダウンロードします。
-スクレイピングを
+人気投票サイト, 
+
+をダウンロードします。
+beautifulsoupを使ってスクレイピングを行います。一例として
+```
+```
+で表をdataframeとして取り出し、見出しとzipを使ってくっつけます。
  https://toho-vote.info/result のデータと東方Wiki http://thwiki.info の作品、楽曲、キャラ情報を使用し、解析コードとそれによって整形されたデータは
+
+ に置いてあります。
 
 == 記述統計
 

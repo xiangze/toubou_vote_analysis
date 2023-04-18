@@ -1,5 +1,5 @@
 //記述統計編
-ここでは投票データをグラフ化し
+ここでは投票結果のデータをグラフ化し大まかな傾向を見てみます。
 
 にのぼり全部をプロットすると点が重なり合って様子がよくわからないので
 
@@ -9,12 +9,75 @@
 
 発見された特徴はあと章のベイズ統計モデリングの章でのモデリングのアイデアにしています。
 
-=== 概要
+=== 概要と手法
 
-=== 多様性
+python(さらには他の言語)などのライブラリを使って多様なグラフを描くことができます。
 
-=== 変動
+さらにはGUIで操作できるインタラクティブなグラフ、アニメーションも描くことも出来ますが本書では表現できないのでブログ、githubを参照ください。
+pandasのmerge関数による集約の手法を用いて
+
+=== アンケートの結果
+
+image::img/entropy_char.png[width=40%][width=40%]
+
+アンケートで年齢や地域、東方プロジェクトを知った時期、感想などを記載できます。
+20年に渡り平均年齢は約21歳から19.5歳に減少し分散が大きくなりつつある。一貫して男性比率が減少している。海外、特に東アジアからの投票が日本の一地域に匹敵する数だけ存在していてその割合は増加しています。
+
+image::img/shittajiki.png[width=40%][width=40%]
+
+image::img/shittajiki_norm.png[width=40%][width=40%]
+
+image::img/region.png[width=40%][width=40%]
+
+=== 投票結果のばらつき、多様性
+
+時が経つにつれて作品、キャラクターが増え、それぞれのファンがついていく一方で初期の作品特に紅魔郷の人気は根強いです。
+東方Project全体の人気の多様性を測る指標として以下のように定義されるエントロピーSという量で表すことができます。
+stem:[
+    S=\sum_i r_i \log (r_i)
+]
+r_iは相対的な得票率です。これを投票回別にプロットしたのが以下です。
+
+image::img/entropy_char.png[width=40%][width=40%]
+
+image::img/entropy_music.png[width=40%][width=40%]
+
+image::img/entropy_title.png[width=40%][width=40%]
+
+キャラクター投票結果で第17回(2021年)以降、音楽投票結果で第15回(2019年)以降に多様性の減少が見られます。 2019年以降であり変動が緩やかであることから新型コロナウイルスの流行による行動変容というよりは相次ぐソーシャルゲームのリリース(キャノンボール 2019~2020,ロストワールド 2020~,ダンマクカグラ 2021~2022、アルカディアレコード 2022〜)によるものと考えられます。これがもたらした影響を次の相関で少し詳しく見ることができます。
 
 === 相関
 
-キャラと音楽の相関を見てみます。
+image::img/title_vs_char.png[width=40%][width=40%]
+
+image::img/title_vs_music.png[width=40%][width=40%]
+
+非想天則、花映塚は相対的に音楽が人気(ゲーム性によるのか)、永夜抄は相対的に作品が人気
+ 
+大まかには作品ポイントとキャラポイントは相関している。再登場のみで初出キャラがいない(非整数)作品はキャラ集計ポイントがNa ここでは0に張り付いている。
+
+投票回による違いはあまりない
+紅魔郷の人気が突出している。主人公(霊夢、魔理沙)は旧作が初登場で人数が少ないので比率は少なく見えている
+
+=== 変動
+
+キャラと音楽の相関の時間的変化を見てみます。
+
+投票回による変動
+
+image::img/char_music_title1.png[width=40%][width=40%]
+image::img/char_music_title2.png[width=40%][width=40%]
+image::img/char_music_title3.png[width=40%][width=40%]
+image::img/char_music_title5.png[width=40%][width=40%]
+image::img/char_music_title6.png[width=40%][width=40%]
+image::img/char_music_title7.png[width=40%][width=40%]
+image::img/char_music_title8.png[width=40%][width=40%]
+image::img/char_music_title9.png[width=40%][width=40%]
+image::img/char_music_title12.png[width=40%][width=40%]
+image::img/char_music_title13.png[width=40%][width=40%]
+image::img/char_music_title14.png[width=40%][width=40%]
+image::img/char_music_title15.png[width=40%][width=40%]
+image::img/char_music_title16.png[width=40%][width=40%]
+image::img/char_music_title17.png[width=40%][width=40%]
+image::img/char_music_title18.png[width=40%][width=40%]
+

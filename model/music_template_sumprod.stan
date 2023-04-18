@@ -174,26 +174,16 @@ model {
         other=otherpow*isother[i];
         org=orgpow*isoriginal[i];
         seihou=seihoupow*isseihou[i];
-/*
-//        mains=hit2d(Nmain,mainchars,i,t,TM,maincharpower);
-//        subs=hit2d(Nsub,subchars,i,t,TM,subpower);
-//        book=hit(Nbook,bookchars,i,bookpow);
-//        hifuu=hit(Nhifuu,hifuuchars,i,hifuupow);
-//        misc=hit(Nmisc,miscchars,i,miscpow);
-//        {{ hit2d("subs" , "Nsub", "subchars","i","t","TM","subpower") }}
-//        {{hit("book","Nbook","bookchars","i","bookpow")}}        
-//        {{hit("hifuu","Nhifuu","hifuuchars","i","hifuupow")}}        
-//        {{hit("misc","Nmisc","miscchars","i","miscpow")}}        
-        //titlebase=hit1d(Nboss,Nchar[t],bosschars,i,titlepow);
-        //noninttitlebase=hit1d(Nsub,Nchar[t],subchars,i,noninttitlepow);
-//       {{hit1d("titlebase", "Nboss", "bosschars","i","titlepow") }}
-//       {{hit1d("noninttitlebase", "Nsub", "subchars","i","noninttitlepow") }}
-*/
-        dth[i]=(sum(inttitle) +sum(noninttitle)
-                    +hifuu+book+CD+old+other+org+seihou)+indivisual[i];
 
-/*
+        real coef=(sum(inttitle) +sum(noninttitle) +hifuu+book+CD+old+other+org+seihou);
+        dth[i]=coef*indivisual[i];
+                   
         if(coef==0.){
+        print("t,i=",t,",",i);            
+            if(indivisual[i]==0){
+                print("indivisual[i]=",indivisual[i]);
+            }
+/*            
           print("t=",t);
           print("index",i);
           print("titlebase[i]",titlebase[i]);
@@ -205,13 +195,9 @@ model {
             {%- endfor %}                
             }else{
             }
-          
-        //print("mains",mains);
-        //print("bosses",bosses);        
-        //print("subs",subs);        
-        //print("misc",misc);        
+            */
         }
-*/
+
         //print("maincharpower",maincharpower);
         //print("boss",bosspower);
         //print("sub",subpower);

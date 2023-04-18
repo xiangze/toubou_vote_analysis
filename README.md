@@ -47,16 +47,15 @@ https://colab.research.google.com/github/xiangze/toubou_vote_analysis/blob/main/
 https://colab.research.google.com/github/xiangze/toubou_vote_analysis/blob/main/stagewise.ipynb)
 
 ### bayesian analysis
-<<<<<<< Updated upstream
-=======
+
 run
 ```
- python analysis.py
+ python analysis_char.py 18 18 sum
 ```
 [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](
 https://colab.research.google.com/github/xiangze/toubou_vote_analysis/blob/main/stan_analyse.ipynb)
 
->>>>>>> Stashed changes
+
 Bayesian analysis by using pystan/gensim
 
 ```

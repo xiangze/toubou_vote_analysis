@@ -4,22 +4,22 @@ include::styles.adoc[]
 
 == はじめに
 
-過去20年にわたる東方Projectの楽曲、キャラ(人妖)の人気投票データからの目で見てわかるパターンの抽出とそれを説明する数理モデルの提唱と解析を行いました。
+過去20年以上にわたる東方Projectの楽曲、キャラ(人妖)の人気投票データからの目で見てわかるパターンの抽出とそれを説明する数理モデルの提唱と解析を行いました。
 
-人気投票サイト https://toho-vote.info/result のデータと東方Wiki http://thwiki.info 、の作品、楽曲、キャラ情報を使用し、解析コードとそれによって整形されたデータは
-https://github.com/xiangze/toubou_vote_analysis
-においてあります。pandas,pystanなどpythonのライブラリを用いており、Googleのcolaboratoryを用いて実行できます。また本書の原稿も置いてあります。
+人気投票サイト https://toho-vote.info/result のデータと東方Wiki http://thwiki.info 東方元ネタWiki 2nd https://seesaawiki.jp/toho-motoneta_2nd/ の作品、楽曲、キャラ情報を使用し、解析コードとそれによって整形されたデータは
+https://github.com/xiangze/toubou_vote_analysis/data においてあります。pandas,pystanなどpythonのライブラリを用いており、Googleのcolaboratoryを用いて実行できます。また本書の原稿もbook以下に置いてあります。
 
-本書の内容はブログ記事
-- https://xiangze.hatenablog.com/entry/2022/12/21/210352#%E3%81%9F%E3%82%81%E3%81%AB%E3%81%AA%E3%82%8B%E6%9C%AC
-- 
+本書の内容の一部はブログ記事
+
+- https://xiangze.hatenablog.com/entry/2022/12/21/210352
+- https://xiangze.hatenablog.com/entry/2023/01/01/232744
+
 に基づいたものです。
 
 == 東方Projectのすごいざっくりした紹介
 
-「東方コミュニティ白書2016 」およびブログ https://xiangze.hatenablog.com/entry/2023/01/01/232744 にて詳しく書かれておりここでは超概略を述べます。
-東方プロジェクトは
-上海アリス幻樂団によるシューティングゲームで25年以上に渡る歴史を持っています。 最近ではスマホゲームのタイトルも複数リリースされ、多くの二次創作があること、音楽の人気が高いことでも知られています。
+「東方コミュニティ白書2016」およびブログ https://xiangze.hatenablog.com/entry/2023/01/01/232744 にて詳しく書かれておりここでは概略を述べます。
+東方Projectは上海アリス幻樂団によるシューティングゲームで25年以上に渡る歴史を持っています。 最近ではスマホゲームのタイトルも複数リリースされ、多くの二次創作があること、音楽の人気が高いことでも知られています。
 
 東方Project作品は以下のように分類されます。
 
@@ -29,12 +29,12 @@ https://github.com/xiangze/toubou_vote_analysis
 - 音楽CD ZUN氏作曲のものでもともと東方紅魔郷が音楽CDとして発表されるはずだった説もあるくらい音楽に力を入れている。整数、非整数作品登場曲の再録、アレンジとオリジナル曲がある。
 - 書籍「東方鈴奈庵」などの書籍、漫画作品の主人公が新キャラの場合が多い
 
-
 選択式でキャラクター(人妖)、音楽、作品に対してそれぞれ7,10,5票入れることができ特に推しには2票入れられる。
 (())
 
 == データの準備
 人気投票サイト, からhtmlをダウンロードします。
+seleniumを
 
 beautifulsoupを使ってスクレイピングを行います。一例として
 ```
@@ -45,15 +45,29 @@ https://github.com/xiangze/toubou_vote_analysis/blob/main/download_and_scrape.ip
 
 https://toho-vote.info/result のデータと東方Wiki http://thwiki.info の作品、楽曲、キャラ情報を使用し、解析コードとそれによって整形されたデータは
 
- に置いてあります。
+githubのdata/ に置いてあります。
 
-文字コードの変遷が時代を感じさせます。
+- data/title_points.csv
+- 
+- 
+まず文字コードの変遷が時代を感じさせます。
 
-回	文字コード
-1	CP932
-2~4	Shift_JIS
-5~10	EUC-JP
-11~18	UTF-8
+.テーブルタイトル
+|===
+|回	|文字コード
+
+|1	
+|CP932
+
+|2~4
+|	Shift_JIS
+
+|5~10
+|	EUC-JP
+
+|11~18
+|	UTF-8
+|===
 
 == 記述統計
 
@@ -65,12 +79,7 @@ include::bayes.adoc[]
 
 == 参考書籍
 
-- Selenium実践入門 ――自動化による継続的なブラウザテスト
-- StanとRでベイズ統計モデリング https://www.kyoritsu-pub.co.jp/book/b10003786.html
-pythonについての記述はありませんが英語版と著者のgithubサイト(https://github.com/MatsuuraKentaro/Bayesian_Statistical_Modeling_with_Stan_R_and_Python)にはpython,pystanのコードがあります。
-- 東方コミュニティ白書2016 
-- 東方コミュニティ白書2019 https://booth.pm/ja/items/2025481
-- https://www.pixiv.net/artworks/68538151
+include::reference.adoc[]
 
 == あとがき
 

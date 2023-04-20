@@ -18,7 +18,11 @@ pandasのmerge関数による集約の手法を用いて
 
 === アンケートの結果
 
-image::img/entropy_char.png[width=40%][width=40%]
+image::img/totalvotenum.png[width=50%][width=40%]
+image::img/normalizedvotenum.png[width=50%][width=40%]
+
+image::img/age.png[width=50%][width=40%]
+image::img/gender.png[width=50%][width=40%]
 
 アンケートで年齢や地域、東方プロジェクトを知った時期、感想などを記載できます。
 20年に渡り平均年齢は約21歳から19.5歳に減少し分散が大きくなりつつある。一貫して男性比率が減少している。海外、特に東アジアからの投票が日本の一地域に匹敵する数だけ存在していてその割合は増加しています。
@@ -33,9 +37,9 @@ image::img/region.png[width=40%][width=40%]
 
 時が経つにつれて作品、キャラクターが増え、それぞれのファンがついていく一方で初期の作品特に紅魔郷の人気は根強いです。
 東方Project全体の人気の多様性を測る指標として以下のように定義されるエントロピーSという量で表すことができます。
-stem:[
-    S=\sum_i r_i \log (r_i)
-]
+
+stem:[    S=\sum_i r_i \log (r_i)]
+
 r_iは相対的な得票率です。これを投票回別にプロットしたのが以下です。
 
 image::img/entropy_char.png[width=40%][width=40%]
@@ -59,11 +63,9 @@ image::img/title_vs_music.png[width=40%][width=40%]
 投票回による違いはあまりない
 紅魔郷の人気が突出している。主人公(霊夢、魔理沙)は旧作が初登場で人数が少ないので比率は少なく見えている
 
-=== 変動
+=== 投票回による変動
 
 キャラと音楽の相関の時間的変化を見てみます。
-
-投票回による変動
 
 image::img/char_music_title1.png[width=40%][width=40%]
 image::img/char_music_title2.png[width=40%][width=40%]

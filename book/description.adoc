@@ -1,20 +1,18 @@
 //記述統計編
 ここでは投票結果のデータをグラフ化し大まかな傾向を見てみます。
+18回分のデータ、全曲で にのぼり全部をプロットすると点が重なり合って様子がよくわからないので
 
-にのぼり全部をプロットすると点が重なり合って様子がよくわからないので
-
-作品ごとに
-
-可視化してデータの傾向を見る方法は探索的データ解析とも呼ばれます。
+作品ごとにまとめた可視化してデータの傾向を見る方法は探索的データ解析(EDA)とも呼ばれます。
 
 発見された特徴はあと章のベイズ統計モデリングの章でのモデリングのアイデアにしています。
 
 === 概要と手法
 
-python(さらには他の言語)などのライブラリを使って多様なグラフを描くことができます。
+python(さらには他の言語)のライブラリplotyを使うと散布図や棒グラフその他多様なグラフを描くことができます。jupyter notebook上のGUIで操作できるインタラクティブなグラフ、アニメーションも描くことも出来ますが本書では表現できないのでブログ、githubを参照ください。
+pandasのmerge関数による　と貼り付けやgroupbyによる作品ごとの結果の集約の手法を用いて
+そのコードは
 
-さらにはGUIで操作できるインタラクティブなグラフ、アニメーションも描くことも出来ますが本書では表現できないのでブログ、githubを参照ください。
-pandasのmerge関数による集約の手法を用いて
+にあります
 
 === アンケートの結果
 
@@ -25,7 +23,7 @@ image::img/age.png[width=50%][width=40%]
 image::img/gender.png[width=50%][width=40%]
 
 アンケートで年齢や地域、東方プロジェクトを知った時期、感想などを記載できます。
-20年に渡り平均年齢は約21歳から19.5歳に減少し分散が大きくなりつつある。一貫して男性比率が減少している。海外、特に東アジアからの投票が日本の一地域に匹敵する数だけ存在していてその割合は増加しています。
+20年に渡り平均年齢は約21歳から19.5歳に減少し分散が大きくなりつつある。一貫して男性比率が減少しています。海外、特に東アジアからの投票が日本の一地域に匹敵する数だけ存在していてその割合は増加しています。
 
 image::img/shittajiki.png[width=40%][width=40%]
 
@@ -38,7 +36,7 @@ image::img/region.png[width=40%][width=40%]
 時が経つにつれて作品、キャラクターが増え、それぞれのファンがついていく一方で初期の作品特に紅魔郷の人気は根強いです。
 東方Project全体の人気の多様性を測る指標として以下のように定義されるエントロピーSという量で表すことができます。
 
-stem:[    S=\sum_i r_i \log (r_i)]
+stem:[ S=\sum_i r_i \log (r_i)]
 
 r_iは相対的な得票率です。これを投票回別にプロットしたのが以下です。
 
@@ -52,9 +50,13 @@ image::img/entropy_title.png[width=40%][width=40%]
 
 === 相関
 
-image::img/title_vs_char.png[width=40%][width=40%]
+キャラクターと対応する楽曲間の人気の相関、およぼそこからのズレを可視化することで見ていきます。
 
-image::img/title_vs_music.png[width=40%][width=40%]
+image::img/scatterplot.png[width=80%][width=80%]
+
+image::img/title_vs_char.png[width=80%][width=80%]
+
+image::img/title_vs_music.png[width=80%][width=80%]
 
 非想天則、花映塚は相対的に音楽が人気(ゲーム性によるのか)、永夜抄は相対的に作品が人気
  
@@ -65,21 +67,43 @@ image::img/title_vs_music.png[width=40%][width=40%]
 
 === 投票回による変動
 
-キャラと音楽の相関の時間的変化を見てみます。
+作品ごと集計した結果からキャラと音楽の相関の時間的変化を見てみます。
+```
 
-image::img/char_music_title1.png[width=40%][width=40%]
-image::img/char_music_title2.png[width=40%][width=40%]
-image::img/char_music_title3.png[width=40%][width=40%]
-image::img/char_music_title5.png[width=40%][width=40%]
-image::img/char_music_title6.png[width=40%][width=40%]
-image::img/char_music_title7.png[width=40%][width=40%]
-image::img/char_music_title8.png[width=40%][width=40%]
-image::img/char_music_title9.png[width=40%][width=40%]
-image::img/char_music_title12.png[width=40%][width=40%]
-image::img/char_music_title13.png[width=40%][width=40%]
-image::img/char_music_title14.png[width=40%][width=40%]
-image::img/char_music_title15.png[width=40%][width=40%]
-image::img/char_music_title16.png[width=40%][width=40%]
-image::img/char_music_title17.png[width=40%][width=40%]
-image::img/char_music_title18.png[width=40%][width=40%]
+```
+pd. を
 
+image::img/char_music_title1.png[width=80%][]
+image::img/char_music_title2.png[width=80%][]
+image::img/char_music_title3.png[width=80%][]
+
+初出作品(妖々夢、永夜抄)が人気トップになる激しい時代
+
+image::img/char_music_title5.png[width=80%][]
+image::img/char_music_title6.png[width=80%][]
+image::img/char_music_title7.png[width=80%][]
+image::img/char_music_title8.png[width=80%][]
+image::img/char_music_title9.png[width=80%][]
+
+新作(風神録、地霊殿)が第二グループを形成し始めるキャラ人気はトップグループより低いが音楽人気は高い。
+新作(星蓮船、神霊廟)の初出が既存の人気作品ほどではなくなる。
+
+image::img/char_music_title12.png[width=80%][]
+image::img/char_music_title13.png[width=80%][]
+image::img/char_music_title14.png[width=80%][]
+image::img/char_music_title15.png[width=80%][]
+image::img/char_music_title16.png[width=80%][]
+image::img/char_music_title17.png[width=80%][]
+image::img/char_music_title18.png[width=80%][]
+
+11回以降 新作が初回から下位グループに位置するようになり、紅魔郷の人気独走が進展している。
+
+=== ドメイン知識と知見
+
+がありデータ分析の言葉ではドメイン知識と呼ばれます。例えば東方の場合冒頭のすごいざっくりした紹介で述べたことのほかに
+
+- 回を経ることに登場キャラクターが増えていく
+- 姉妹キャラでは妹の方が人気が高いことが多い
+- 古い作品の
+
+などの事実があります。グラフで可視化することでその傾向を見いだすことができ、次の章の統計モデリングに組み込むことができます。

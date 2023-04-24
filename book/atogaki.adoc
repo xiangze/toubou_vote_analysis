@@ -5,7 +5,7 @@
 
 https://statmodeling.hatenablog.com/entry/kishi-rating
 
-異なる時代に活躍した棋士の強さを推定し、その比較をすることも可能にしています。web上では類例やテニスなど他の分野に関する解析結果を挙げている人もいます。
+では異なる時代に活躍した将棋の棋士の強さを推定し、その比較をすることも可能にしています。web上では類例やテニスなど他の分野に関する解析結果を挙げている人もいます。
 
 - https://bestmodel.jp/fujiisouta-habuyosiharu2/
 - https://ie110704.net/2018/05/24/

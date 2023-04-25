@@ -14,4 +14,5 @@
 //:title-page-background-image: image:img/103827656_p0.jpg[position=top]
 :title-font-color: #000000
 //:title-placement: below
+:source-highlighter: rouge
 :stem:

@@ -4,10 +4,12 @@ include::styles.adoc[]
 
 == はじめに
 
-過去20年以上にわたる東方Projectの楽曲、キャラ(人妖)の人気投票データからの目で見てわかるパターンの抽出とそれを説明する数理モデルの提唱と解析を行いました。
+過去20年以上にわたる東方Projectの楽曲、キャラ(人妖)の人気投票データは年を経るごとに膨大になり、情報が蓄積されています。その中から目で見てわかるパターンの抽出とそれを説明する数理モデルの提唱と解析を行いました。
 
 人気投票サイト https://toho-vote.info/result のデータと東方Wiki http://thwiki.info 東方元ネタWiki 2nd((https://seesaawiki.jp/toho-motoneta_2nd/)) の作品、楽曲、キャラ情報を使用し、解析コードとそれによって整形されたデータは
 https://github.com/xiangze/toubou_vote_analysis/data においてあります。pandas,pystanなどpythonのライブラリを用いており、Googleのcolaboratoryを用いて実行できます。また本書の原稿もbook以下に置いてあります。
+
+NOTE: 本投票において公開されたデータは、統計や考察などの目的であれば、自己の責任に基づき自由に使用しても構いませんとのことです
 
 本書の内容の一部はブログ記事
 
@@ -33,6 +35,7 @@ https://github.com/xiangze/toubou_vote_analysis/data においてあります。
 NOTE:東方カンファレンスで考察がされています。 https://twitter.com/blue_comment/status/1644603082469429249
 
 == データの準備
+
 人気投票サイトから各回の投票結果htmlをダウンロードします。17回からは動的にサイトが生成されるようになりましたがseleniumを使うと自動でダウンロードができます。
 
 まず文字コードの変遷が時代を感じさせます。
@@ -58,11 +61,11 @@ htmlファイルを読み込んでbeautifulsoupを使ってスクレイピング
 ```
 include::../generatecsv.py[]
 ```
-のようにして表をcsvファイルに書き出し、その後dataframeとして取り出し、見出しとzipを使ってくっつけます。
+のようにして表をcsvファイルに書き出した後dataframeとして取り出し、見出しとzipを使ってくっつけます。その過程は
 
-https://github.com/xiangze/toubou_vote_analysis/blob/main/download_and_scrape.ipynb
+download_and_scrape.ipynb
 
-で https://toho-vote.info/result のデータを整形しgithubのdata以下に置いてあります。
+に記載してあり結果はgithubのdata以下に置いてあります。
 
 - data/title_points.csv 作品投票結果(12回以降)
 - data/char_points.csv キャラクター投票結果
@@ -78,17 +81,17 @@ https://github.com/xiangze/toubou_vote_analysis/blob/main/download_and_scrape.ip
 これらの結果と東方Wiki http://thwiki.info 東方元ネタWiki 2nd https://seesaawiki.jp/toho-motoneta_2nd/ 
 の楽曲、キャラの登場作品、面、自機に関する情報をcsv化したもの
 
-- integertitles.csv 整数タイトル一覧
-- nonintegertitles.csv 非整数タイトル一覧
+- data/integertitles.csv 整数タイトル一覧
+- data/nonintegertitles.csv 非整数タイトル一覧
 
-- char_noninteger_list.csv 非整数タイトル登場キャラクター一覧
-- mainchar_integer_list.csv 整数タイトル自機キャラクター一覧
-- bosslist.csv 整数タイトルボスキャラクター一覧
-- bookchar_list.csv 書籍のみ登場キャラクター一覧
-- hifuu_list.csv 秘封倶楽部キャラクター一覧
-- misc_chars.csv その他のキャラクター一覧
+- data/char_noninteger_list.csv 非整数タイトル登場キャラクター一覧
+- data/mainchar_integer_list.csv 整数タイトル自機キャラクター一覧
+- data/bosslist.csv 整数タイトルボスキャラクター一覧
+- data/bookchar_list.csv 書籍のみ登場キャラクター一覧
+- data/hifuu_list.csv 秘封倶楽部キャラクター一覧
+- data/misc_chars.csv その他のキャラクター一覧
 
-- music_noninteger_title.csv 非整数タイトル楽曲一覧
+- data/music_noninteger_title.csv 非整数タイトル楽曲一覧
 
 とを結合して、以下では考察、解析をしていきます。
 

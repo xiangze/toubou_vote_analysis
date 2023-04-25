@@ -1,7 +1,9 @@
 
 - Selenium実践入門 ――自動化による継続的なブラウザテスト
 - StanとRでベイズ統計モデリング https://www.kyoritsu-pub.co.jp/book/b10003786.html
-pythonについての記述はありませんが英語版と著者のgithubサイト(https://github.com/MatsuuraKentaro/Bayesian_Statistical_Modeling_with_Stan_R_and_Python)にはpython,pystanのコードがあります。
+
+pythonについての記述はありませんが英語版と著者のgithubサイト(https://github.com/MatsuuraKentaro/Bayesian_Statistical_Modeling_with_Stan_R_and_Python )にはpython,stanのコードがあります。
+    
 - 東方コミュニティ白書2016 https://hisayukihonbun.booth.pm/items/760429
 - 東方コミュニティ白書2019 https://booth.pm/ja/items/2025481
 - 東方コミュニティ白書を見つめなおす https://www.pixiv.net/artworks/68538151

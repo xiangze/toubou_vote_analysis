@@ -15,7 +15,7 @@ env = Environment(loader=FileSystemLoader('./', encoding='utf8'))
 def choosename(df:pd.DataFrame,labels:[str]=["初投票回","charid"])->pd.DataFrame : 
     return pd.DataFrame([df[s] for s in labels]   ).T
 
-#モデルのtemplate を展開するための関数
+#モデルのテンプレートを展開するための関数
 def frender(fname:str,d:dict):
     templ = env.get_template(fname)
     return templ.render(d)
@@ -55,8 +55,9 @@ Nchar=[25,48,67,92,113,134,
 # モデルのファイル名
 template_fname="model/charpower_template_"+suffix+".stan"
 model_fname="model/charpower_"+suffix+".stan"
+# テンプレートによるモデルのファイルの変換
 renderfromfile(template_fname,model_fname,{'T':T,"T1":T+1,"TM":TM})
-# モデルの読み込み
+# モデルのファイルの読み込み
 with open(model_fname) as f:
      model_code=f.read()
 

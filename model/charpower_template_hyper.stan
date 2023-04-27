@@ -11,7 +11,7 @@ data {
   int<lower=0> Nhifuu;//
   int<lower=0> Nmisc;
 
-  //normalized vote num. 1:rate
+  //テンプレートで投票回ごとに異なる正規化した投票数の要素数(キャラクター数)を設定する
   {% for t in range(1,T1) %}
   simplex [Nchar[{{t}}]] chars_vote_normal{{t}};  
   {%- endfor %}                

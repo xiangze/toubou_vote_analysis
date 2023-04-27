@@ -58,7 +58,7 @@ NOTE:東方カンファレンスで考察がされています。 https://twitte
 |===
 
 htmlファイルを読み込んでbeautifulsoupを使ってスクレイピングを行います。一例として
-```
+```python
 include::../generatecsv.py[]
 ```
 のようにして表をcsvファイルに書き出した後dataframeとして取り出し、見出しとzipを使ってくっつけます。その過程は

@@ -46,8 +46,8 @@ suffix=args.suffix
 # モデルのファイル名
 template_fname="model/music_template_"+suffix+".stan"
 model_fname="model/music_"+suffix+".stan"
+# テンプレートによるモデルのファイルの変換
 renderfromfile(template_fname,model_fname,{'T':T,"T1":T+1,"TM":TM})
-
 # モデルの読み込み
 with open(model_fname) as f:
      model_code=f.read()

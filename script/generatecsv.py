@@ -26,7 +26,7 @@ def openhtml(ddir,filename_tr):
                 with open(filename,"r",encoding='CP932') as fp:
                     htmltext=fp.read()
             except:
-                print("cannot read"+filename)
+                print("cannot read "+filename)
     return htmltext
     
 def souptable2csv(table,writedown=False,filename_tr=""):
@@ -50,22 +50,32 @@ def converthtml2csv(filename_tr,writedown=False):
     table=soup 
     souptable2csv(table,writedown,filename_tr)
 
-N=18
-ddir="data"
-url="https://toho-vote.info/result"
+if __name__=="__main__":
+    import argparse
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--N', type=int, default=19)
+    args = parser.parse_args()
+    N=args.N
+    ddir="data"
+    url="https://toho-vote.info/result"
 
+    if(not (os.path.exists(ddir) and os.path.isdir(ddir))):
+        os.mkdir(ddir)
 
-if(not (os.path.exists(ddir) and os.path.isdir(ddir))):
-    os.mkdir(ddir)
+    if(N<=0):
+        import glob
+        htmlfiles=glob.glob("data/*/*.html")
 
-import glob
-htmlfiles=glob.glob("data/*/*.html")
-
-for f in htmlfiles:
-    filename_tr=f[4:]
-    filename_tr=filename_tr.split(".")[0]
-    converthtml2csv(filename_tr)
-
+        for f in htmlfiles:
+            filename_tr=f[4:]
+            filename_tr=filename_tr.split(".")[0]
+            converthtml2csv(filename_tr)
+    else:
+            f=glob.glob(f"data/{N}/*.html")
+            filename_tr=f[4:]
+            filename_tr=filename_tr.split(".")[0]
+            print(filename_tr)
+            converthtml2csv(filename_tr,writedown=True)
 
 
 

@@ -17,6 +17,12 @@ China(optional)
 - http://thwiki.info/?%A5%AD%A5%E3%A5%E9%CA%CC%A5%B9%A5%DA%A5%EB%A5%AB%A1%BC%A5%C9%2F1#v5aac3bf spell cards &charactors
 - https://touhou.arrangement-chronicle.com/statistics music
 - https://w.atwiki.jp/toho/pages/842.html#id_713b4b9a title & music & charactors
+
+### pixiv
+- [東方project人気投票](https://dic.pixiv.net/a/%E6%9D%B1%E6%96%B9project%E4%BA%BA%E6%B0%97%E6%8A%95%E7%A5%A8)
+- [東方楽曲](https://dic.pixiv.net/a/%E6%9D%B1%E6%96%B9%E6%A5%BD%E6%9B%B2)
+- [東方Projectの登場人物](https://dic.pixiv.net/a/%E6%9D%B1%E6%96%B9Project%E3%81%AE%E7%99%BB%E5%A0%B4%E4%BA%BA%E7%89%A9)
+
 - pixiv ranking illustration
 - https://docs.google.com/spreadsheets/d/1YKpwyCOLRWiC9jucljunxS41i75zUYojI3qx1JnIpVI/edit?usp=sharing
 

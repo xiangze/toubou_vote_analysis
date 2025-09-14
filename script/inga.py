@@ -1,6 +1,8 @@
 #因果推論
 import numpy as np, pandas as pd, pymc as pm, aesara.tensor as at
-import pandas as pd
+import seaborn as sns
+import semopy 
+from sklearn import datasets
 
 #交絡 X が観測されていて、無交絡（Conditional Ignorability） が妥当。
 def backdoor(df,X_cols = ["x1", "x2", "x3"]):# 交絡の列):
@@ -185,6 +187,38 @@ def RDD(df):
     print(tau_post.mean(), np.quantile(tau_post,[0.025,0.975]))
     return tau_post
 
+#https://qiita.com/ka201504/items/7edff7233869cd88a9cc
+def SEM(df,outfilename="SEMout.png",view=False):
+    df_std = df.apply(lambda x: (x-x.mean())/x.std(), axis=0)
+    if(view):
+        df_std_corr = df_std.corr()
+        sns.heatmap(df_std_corr, cmap="coolwarm", vmin=-1, vmax=1, annot=True)
+    # 仮説モデル
+    model = '''
+        # 測定方程式（潜在変数 =~ 観測変数）
+        Charm =~ charpoint + musicpoint +
+        Capability =~ Jumps + Situps + Chins
+        Body =~ Waist + Weight
+
+        # 構造方程式（目的変数 ~ 説明変数、潜在or観測どちらもOK）
+        Chins ~ Capability + Body
+        Situps ~Capability + Body
+        Jumps ~ Capability + Body
+
+        # 共変関係（双方向、潜在or観測どちらもOK）
+        Chins ~~ Situps
+        Situps ~~ Jumps
+        Chins ~~ Jumps
+        Weight ~~ Waist
+        '''
+    mod = semopy.Model(model)
+    res = mod.fit(df_std)
+    inspect = mod.inspect()
+    if(view):
+        print(inspect)
+
+    g = semopy.semplot(mod, outfilename, plot_covs=True, engine="dot")
+
 if __name__=="__main__":
     import argparse
     parser = argparse.ArgumentParser()
@@ -193,18 +227,20 @@ if __name__=="__main__":
     parser.add_argument('--test', type=bool, default=False)
     args = parser.parse_args()
     
+    data=pd.read_csv(args.name)
     if(args.test):
         import patsy as pt
         # 交絡行列Xのワンライナー作成（カテゴリ含む）
-        y = df["y"].values
-        t = df["t"].values
-        X = pt.dmatrix("0 + x1 + x2 + C(cat1) + bs(x3, df=4)", df, return_type="dataframe").values
+        y = data["y"].values
+        t = data["t"].values
+        X = pt.dmatrix("0 + x1 + x2 + C(cat1) + bs(x3, df=4)", data, return_type="dataframe").values
     else:
-        data=pd.read_csv(args.name)
         X=data["X"]
         t=data["t"]
 
     method=args.method
+    if(method=="SEM"):
+        SEM(data)
     if(method=="DiD"):
         DiD(data)
     elif(method=="backdoor"):

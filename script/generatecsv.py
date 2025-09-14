@@ -34,10 +34,11 @@ def souptable2csv(table,writedown=False,filename_tr=""):
     table_contents=table.find_all("tr")
     outdata  =get_tabledata(table_contents)
     outheader=get_tableheader(table_header)
-    try:
+    if(len(outheader[0])==0):
+        outdata[0]=["順位","前回","前々","名前","ポイント","一推し","コメント"]
+    else:
         outdata[0]=outheader[0]
-    except:
-        filename_tr
+
         
     if(writedown):
         with open(ddir+filename_tr+".csv", 'w') as fpw:
@@ -57,7 +58,7 @@ if __name__=="__main__":
     args = parser.parse_args()
     N=args.N
     ddir="data"
-    url="https://toho-vote.info/result"
+    #url="https://toho-vote.info/result"
 
     if(not (os.path.exists(ddir) and os.path.isdir(ddir))):
         os.mkdir(ddir)
@@ -71,11 +72,12 @@ if __name__=="__main__":
             filename_tr=filename_tr.split(".")[0]
             converthtml2csv(filename_tr)
     else:
-            f=glob.glob(f"data/{N}/*.html")
-            filename_tr=f[4:]
-            filename_tr=filename_tr.split(".")[0]
-            print(filename_tr)
-            converthtml2csv(filename_tr,writedown=True)
+            fs=glob.glob(f"data/{N}/*.html")
+            for f in fs:
+                filename_tr=f[4:]
+                filename_tr=filename_tr.split(".")[0]
+                print(filename_tr)
+                converthtml2csv(filename_tr,writedown=True)
 
 
 

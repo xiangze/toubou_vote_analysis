@@ -1,5 +1,22 @@
 import pandas as pd
 
+def columnfunc_char(df:pd.DataFrame,i:int):
+    if(i==1):
+        df.columns= ["名前", "","" ,"順位","","ポイント"]
+    elif(i==2):
+        df.columns= ['順位', '名前', 'ポイント','コメント']
+    elif(i==3):
+        df.columns= ['順位', '名前', 'ポイント','一押し','コメント']#['順位', '名前','前回', 'ポイント','コメント']
+    elif(i==4):
+        df.columns= ['順位', '前回','名前', 'ポイント','一押し','コメント']
+    else:
+        try:
+            df.columns=['順位', '前回','前々','名前', 'ポイント', '一押し','コメント']
+        except:
+            pass
+#    df.columns=[s+str(i+1) if not s in ["名前"] else s for s in df.columns ]          
+    return df
+
 def cleantitle(df:pd.DataFrame,c:str="Track Name"):
     df[c]=df[c].replace('\u3000.*',"",regex=True)
     df[c]=df[c].replace('～.*',"",regex=True)
@@ -12,20 +29,30 @@ def cleantitle(df:pd.DataFrame,c:str="Track Name"):
     return df
 
 def cleantouhou(df:pd.DataFrame,c:str="title"):
-    df[c]=df[c].replace('^東方',"",regex=True)    
+    try:
+        df[c]=df[c].replace('^東方',"",regex=True)    
+    except:
+        df["名前"]=df["名前"].replace('^東方',"",regex=True)    
     return df
 
 def remove_English_title(totaltable,c="名前"):
     totaltable[c]=totaltable[c].replace('\u3000.*',"",regex=True)
     totaltable[c]=totaltable[c].replace('～.*',"",regex=True)
     totaltable[c]=totaltable[c].replace(' - .*',"",regex=True)
+    return totaltable
 
 def rename_fill_drop(df:pd.DataFrame,cn:str):
     d=df.rename(columns={cn+"_x":cn})
     d[cn]=d[cn].fillna(d[cn+"_y"])
     d=d.drop(cn+"_y",axis=1)
     return d
-    
+
+def clean(df,c="名前"):
+    df=cleantitle(df,c)
+    df=remove_English_title(df,c)
+#    df=rename_fill_drop(df,c)
+    return df
+
 def stage_nayose(p:pd.DataFrame)-> pd.DataFrame:
     p["stage"]=p.index.values
     p=p.replace("ボス.*","ボステーマ",regex=True)
@@ -76,7 +103,7 @@ def stage_nayose(p:pd.DataFrame)-> pd.DataFrame:
     p=p.replace("キャラ特定のテーマ.*","キャラ特定のテーマ",regex=True)
     return p
 
-def music_nayose(df,c="名前"):
+def music_nayose(df:pd.DataFrame,c="名前"):
     df[c]=df[c].replace("サーカスレヴァリエ（機械サーカス","サーカスレヴァリエ")
     df[c]=df[c].replace("My Maid， Sweet Maid","My Maid Sweet Maid")
     df[c]=df[c].replace("My Maid，Sweet Maid","My Maid Sweet Maid")
@@ -89,5 +116,34 @@ def music_nayose(df,c="名前"):
     df[c]=df[c].replace("落日に生える逆さ城","落日に映える逆さ城")
     df[c]=df[c].replace("光輝く天球儀","光り輝く天球儀")
     #同じ名前を合計
-    df=df.groupby(c).apply(lambda x: x.sum()).drop(c,axis=1).reset_index()
+    try:
+        df=df.groupby(c).sum().reset_index()
+    except:
+        print(c)
+        print(df)
+        df=df.groupby(c).sum().reset_index()
+        print(df)
+        print(df.columns)
+        exit()
+    if(not "名前" in df.columns or not "ポイント" in df.columns):
+        print(df)
+
+    return df
+
+def nayose(df,genre="人妖",c="名前",N:int=10):
+    #第一回
+    if(not "名前" in df.columns):
+        df.columns=df.columns.astype(str).str.replace("ランク","名前")
+        df.columns=df.columns.astype(str).str.replace("グラフ","ポイント")
+    
+    df=clean(df,c)
+    if(genre=="title" or genre=="作品"):
+        df=cleantitle(df,c)
+        df=cleantouhou(df)
+    elif(genre=="char" or genre=="人妖" or genre=="キャラ"):
+        df=df.replace('十六夜咲夜', '十六夜 咲夜', regex=True)
+        df=columnfunc_char(df,N)
+    else: #音楽
+        df=music_nayose(df)
+
     return df
